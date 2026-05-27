@@ -1,0 +1,3478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#031433" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>Prodental | Clínica dental</title>
+  <style>
+    :root {
+      --royal: #1e5fae;
+      --royal-dark: #082e68;
+      --royal-deep: #031433;
+      --steel: #8fb1d8;
+      --steel-bright: #e9f4ff;
+      --steel-dark: #4f719c;
+      --sky: #bfefff;
+      --sky-bright: #f0fbff;
+      --white: #f7fbff;
+      --muted: #c9dcff;
+      --line: rgba(191, 226, 255, .28);
+      --metal-line: linear-gradient(135deg, rgba(255,255,255,.74), rgba(143,177,216,.34) 34%, rgba(255,255,255,.12) 64%, rgba(79,113,156,.45));
+      --card: rgba(5, 34, 82, .82);
+      --shadow: 0 24px 70px rgba(0, 0, 0, .35);
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    img, svg { max-width: 100%; }
+    h1, h2, h3, p, a, strong, span { overflow-wrap: anywhere; }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 88px;
+      overflow-x: hidden;
+      text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 18% 10%, rgba(191, 239, 255, .22), transparent 25rem),
+        radial-gradient(circle at 92% 18%, rgba(76, 158, 255, .24), transparent 28rem),
+        linear-gradient(145deg, #020c22, var(--royal-dark) 46%, var(--royal));
+    }
+
+    .dental-decor {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .decor-item {
+      position: absolute;
+      opacity: .16;
+      filter: drop-shadow(0 18px 28px rgba(0,0,0,.32));
+      transform: rotate(var(--rotate, 0deg));
+    }
+
+    .decor-tooth {
+      width: clamp(90px, 16vw, 180px);
+      color: var(--sky-bright);
+    }
+
+    .decor-tool {
+      width: clamp(120px, 22vw, 260px);
+      color: #d9e6ef;
+      opacity: .13;
+    }
+
+    .decor-a { top: 92px; right: -34px; --rotate: 0deg; }
+    .decor-b { top: 46vh; left: -48px; --rotate: 0deg; }
+    .decor-c { bottom: 10vh; right: 6vw; --rotate: 0deg; }
+    .decor-d { top: 28vh; right: 12vw; --rotate: 42deg; }
+    .decor-e { bottom: 28vh; left: 12vw; --rotate: -38deg; }
+
+    main, nav, footer, .welcome-screen, .specialists-modal, .appointment-modal, .admin-modal, .access-modal, .thanks-modal, .toast {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-decor {
+      position: absolute;
+      z-index: 0;
+      pointer-events: none;
+      opacity: .18;
+      color: var(--sky-bright);
+      filter: drop-shadow(0 18px 28px rgba(0,0,0,.28));
+      transform: rotate(var(--rotate, 0deg));
+    }
+
+    .section-decor.tooth-small {
+      width: 92px;
+      right: clamp(16px, 5vw, 64px);
+      top: 20px;
+      --rotate: 0deg;
+    }
+
+    .section-decor.tool-small {
+      width: 145px;
+      left: clamp(10px, 4vw, 52px);
+      bottom: 20px;
+      --rotate: -90deg;
+      opacity: .12;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea, select { font: inherit; }
+    button, a, input, textarea, select {
+      -webkit-tap-highlight-color: rgba(191, 239, 255, .18);
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      padding-top: max(14px, env(safe-area-inset-top));
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px clamp(18px, 4vw, 58px);
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(5, 32, 78, .94), rgba(3, 20, 51, .86));
+      backdrop-filter: blur(16px);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, .18);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      font-size: 20px;
+    }
+
+    .logo {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(145deg, var(--steel-bright), #9fc6ec 52%, #5e86b5);
+      padding: 4px;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.9),
+        inset 0 -2px 8px rgba(3,20,51,.22),
+        0 10px 28px rgba(0,0,0,.24);
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .links a:hover { color: var(--white); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      min-height: 46px;
+      touch-action: manipulation;
+      cursor: pointer;
+      font-weight: 850;
+      color: var(--royal-deep);
+      background: linear-gradient(145deg, var(--sky-bright), var(--sky) 48%, var(--steel));
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.85),
+        inset 0 -1px 0 rgba(4,21,56,.18);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 38px rgba(185, 228, 236, .22);
+      background: var(--sky-bright);
+    }
+
+    .btn.secondary {
+      color: var(--white);
+      background: transparent;
+      border: 1px solid var(--line);
+    }
+
+    .btn.secondary:hover { background: rgba(255, 255, 255, .08); box-shadow: none; }
+
+    .hero {
+      min-height: calc(100vh - 75px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr);
+      gap: clamp(28px, 5vw, 74px);
+      align-items: center;
+      padding: 54px clamp(18px, 4vw, 58px) 42px;
+    }
+
+    .eyebrow {
+      color: var(--sky);
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .14em;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 16px 0;
+      font-size: clamp(42px, 7vw, 86px);
+      line-height: .94;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 650px;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 21px);
+      line-height: 1.7;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .hero-card, .card, .quote, .contact-box {
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background:
+        linear-gradient(var(--card), var(--card)) padding-box,
+        var(--metal-line) border-box;
+      box-shadow:
+        var(--shadow),
+        inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .hero-card {
+      overflow: hidden;
+    }
+
+    .hero-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, rgba(255,255,255,.09), rgba(143,177,216,.08));
+    }
+
+    .status {
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: var(--royal-deep);
+      background: var(--sky);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .doctor {
+      display: grid;
+      gap: 16px;
+      padding: 18px;
+    }
+
+    .doctor-visual {
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(240, 251, 255, .45), transparent 9rem),
+        linear-gradient(135deg, rgba(5, 43, 103, .96), rgba(143, 177, 216, .2));
+    }
+
+    .doctor-visual svg {
+      width: min(68%, 280px);
+      height: auto;
+      display: block;
+      margin: auto;
+      filter: drop-shadow(0 24px 40px rgba(0, 0, 0, .22));
+    }
+
+    .doctor h2 {
+      margin: 0;
+      font-size: clamp(26px, 3vw, 38px);
+    }
+
+    .doctor p { margin: 0; color: var(--muted); line-height: 1.65; }
+
+    .specialists-trigger {
+      width: 100%;
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--royal-deep);
+      background: linear-gradient(145deg, var(--sky-bright), var(--sky) 48%, var(--steel));
+      font-weight: 900;
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .14em;
+      cursor: pointer;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.85),
+        inset 0 -1px 0 rgba(4,21,56,.18);
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .specialists-trigger:hover,
+    .specialists-trigger:focus-visible {
+      color: var(--royal-deep);
+      background: var(--sky-bright);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 38px rgba(185, 228, 236, .22);
+      outline: none;
+    }
+
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .fact {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(145deg, rgba(255,255,255,.09), rgba(143,177,216,.06));
+    }
+
+    .fact strong { display: block; font-size: 24px; }
+    .fact span { color: var(--muted); font-size: 13px; }
+
+    section {
+      position: relative;
+      padding: 76px clamp(18px, 4vw, 58px);
+      scroll-margin-top: 88px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 26px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(30px, 4vw, 52px);
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      max-width: 620px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      min-height: 220px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      background:
+        linear-gradient(rgba(10, 62, 143, .92), rgba(6, 40, 96, .9)) padding-box,
+        linear-gradient(135deg, rgba(255,255,255,.86), rgba(191,239,255,.55), rgba(79,113,156,.55)) border-box;
+    }
+
+    .tag {
+      width: fit-content;
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: var(--royal-deep);
+      background: linear-gradient(145deg, var(--sky-bright), var(--sky) 56%, var(--steel));
+      font-size: 12px;
+      font-weight: 900;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.85);
+    }
+
+    .card h3 { margin: 18px 0 10px; font-size: 24px; }
+    .card p { margin: 0; color: var(--muted); line-height: 1.6; }
+
+    .price-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .price {
+      min-height: 155px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(rgba(255,255,255,.07), rgba(255,255,255,.04)) padding-box,
+        var(--metal-line) border-box;
+      border: 1px solid transparent;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .price h3 {
+      min-height: 58px;
+      margin: 0 0 12px;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .price strong {
+      display: block;
+      color: var(--sky-bright);
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .price a {
+      color: var(--sky);
+      font-weight: 850;
+    }
+
+    .locations {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .map {
+      height: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: end;
+      gap: 12px;
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(223, 248, 255, .92), rgba(185, 228, 236, .76)),
+        repeating-linear-gradient(35deg, transparent 0 24px, rgba(23, 59, 122, .13) 25px 27px);
+      color: var(--royal-deep);
+    }
+
+    .map strong {
+      font-size: 24px;
+      line-height: 1.1;
+    }
+
+    .map span {
+      max-width: 360px;
+      line-height: 1.45;
+      font-weight: 750;
+    }
+
+    .map-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .map-actions a {
+      min-height: 40px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: var(--white);
+      background: var(--royal);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .map-actions a.secondary-map {
+      color: var(--royal-deep);
+      background: rgba(255, 255, 255, .72);
+    }
+
+    .testimonials {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .quote {
+      padding: clamp(22px, 4vw, 38px);
+      min-height: 240px;
+    }
+
+    .quote blockquote {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1.18;
+      font-weight: 850;
+    }
+
+    .quote cite {
+      display: block;
+      margin-top: 22px;
+      color: var(--muted);
+      font-style: normal;
+    }
+
+    .comment-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .comment-form textarea { min-height: 110px; }
+
+    .rating-field {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      min-height: 51px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: linear-gradient(145deg, rgba(3, 20, 51, .92), rgba(8, 46, 104, .78));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .rating-field span {
+      color: rgba(201, 220, 255, .76);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .star-rating {
+      display: inline-flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+
+    .star-rating input {
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+      pointer-events: none;
+    }
+
+    .star-rating label {
+      cursor: pointer;
+      color: rgba(201, 220, 255, .35);
+      font-size: 30px;
+      line-height: 1;
+      text-shadow: 0 0 0 rgba(191, 239, 255, 0);
+      transform: scale(1);
+      transition: color .16s ease, text-shadow .16s ease, transform .16s ease;
+    }
+
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label {
+      color: #ffe680;
+      text-shadow:
+        0 0 10px rgba(255, 230, 128, .72),
+        0 0 22px rgba(191, 239, 255, .42);
+    }
+
+    .star-rating label:hover {
+      transform: scale(1.14);
+    }
+
+    .star-rating input:focus-visible + label {
+      outline: 2px solid var(--sky);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .comment-stars {
+      margin-bottom: 14px;
+      color: #ffe680;
+      font-size: 20px;
+      letter-spacing: 2px;
+      text-shadow:
+        0 0 9px rgba(255, 230, 128, .62),
+        0 0 18px rgba(191, 239, 255, .28);
+    }
+
+    .comments-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .comments-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 14px;
+    }
+
+    .comments-actions .btn {
+      min-width: 220px;
+    }
+
+    .comments-page {
+      min-height: 100dvh;
+      padding: 56px clamp(18px, 4vw, 58px);
+    }
+
+    .comments-page-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .comments-page-head h1 {
+      margin: 0;
+      font-size: clamp(38px, 6vw, 72px);
+    }
+
+    .comments-page-head p {
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .comments-page-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .comment-date {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .comment-card {
+      min-height: 170px;
+      padding: 18px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background:
+        linear-gradient(rgba(255,255,255,.07), rgba(255,255,255,.04)) padding-box,
+        var(--metal-line) border-box;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .comment-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .comment-card strong {
+      display: block;
+      margin-top: 16px;
+      color: var(--sky-bright);
+    }
+
+    .contact {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .contact-box { padding: 24px; }
+    .contact-box p { color: var(--muted); line-height: 1.7; }
+
+    .contact-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+      color: var(--muted);
+    }
+
+    .appointment-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .schedule-card {
+      padding: clamp(18px, 3vw, 28px);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background:
+        linear-gradient(145deg, rgba(6, 42, 96, .96), rgba(12, 83, 153, .9) 54%, rgba(143, 177, 216, .78)) padding-box,
+        var(--metal-line) border-box;
+      color: var(--white);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .35);
+    }
+
+    .schedule-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .schedule-head h3 {
+      margin: 4px 0 0;
+      font-size: clamp(24px, 2.8vw, 34px);
+      line-height: 1.08;
+      color: var(--white);
+    }
+
+    .schedule-kicker {
+      color: var(--sky);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .schedule-badge {
+      flex: 0 0 auto;
+      padding: 9px 12px;
+      border: 1px solid rgba(191, 239, 255, .42);
+      border-radius: 8px;
+      color: var(--royal-deep);
+      background: linear-gradient(145deg, var(--sky-bright), var(--steel));
+      font-size: 13px;
+      font-weight: 900;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
+    }
+
+    .appointment-details {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .detail-pill {
+      min-height: 74px;
+      padding: 12px;
+      border: 1px solid rgba(191, 239, 255, .24);
+      border-radius: 8px;
+      background: rgba(3, 20, 51, .42);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .detail-pill span {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--sky);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .detail-pill strong {
+      display: block;
+      color: var(--white);
+      line-height: 1.35;
+    }
+
+    .schedule-contact {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin: 0 0 14px;
+    }
+
+    .schedule-contact span {
+      min-height: 58px;
+      padding: 10px 12px;
+      border: 1px solid rgba(191, 239, 255, .22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .schedule-contact strong,
+    .schedule-contact a {
+      display: block;
+    }
+
+    .schedule-contact strong {
+      color: var(--sky);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .schedule-contact a {
+      margin-top: 4px;
+      color: var(--white);
+      font-weight: 850;
+      overflow-wrap: anywhere;
+    }
+
+    .schedule-notes {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-weight: 750;
+      line-height: 1.45;
+    }
+
+    .schedule-notes span {
+      display: block;
+      padding: 10px 12px;
+      border: 1px solid rgba(191, 239, 255, .18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .05);
+    }
+
+    .date-carousel {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) 44px;
+      align-items: stretch;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .date-arrow {
+      min-height: 66px;
+      cursor: pointer;
+      border: 1px solid rgba(191, 239, 255, .26);
+      border-radius: 8px;
+      color: var(--sky-bright);
+      background: rgba(3, 20, 51, .48);
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      transition: transform .16s ease, background .16s ease, color .16s ease;
+    }
+
+    .date-arrow:hover,
+    .date-arrow:focus-visible {
+      color: var(--royal-deep);
+      background: linear-gradient(145deg, var(--sky-bright), var(--steel));
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .date-arrow:disabled {
+      cursor: default;
+      opacity: .38;
+      transform: none;
+    }
+    .date-tabs {
+      display: flex;
+      gap: 8px;
+      margin: 0;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x proximity;
+      scrollbar-width: thin;
+      padding-bottom: 6px;
+    }
+
+    .date-tab,
+    .time-slot,
+    .time-toggle {
+      cursor: pointer;
+      border: 0;
+      border-radius: 8px;
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+
+    .date-tab {
+      flex: 0 0 clamp(142px, 24vw, 190px);
+      min-height: 66px;
+      padding: 10px 8px;
+      scroll-snap-align: start;
+      color: var(--white);
+      background: rgba(3, 20, 51, .44);
+      border: 1px solid rgba(191, 239, 255, .18);
+      font-weight: 900;
+    }
+
+    .date-tab span {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .date-tab.active,
+    .date-tab:hover,
+    .time-slot:hover,
+    .time-slot.selected {
+      color: var(--royal-deep);
+      background: linear-gradient(145deg, var(--sky-bright), var(--steel));
+      box-shadow: 0 12px 28px rgba(191, 239, 255, .18);
+      transform: translateY(-1px);
+    }
+
+    .date-tab.active span,
+    .date-tab:hover span {
+      color: var(--royal-dark);
+    }
+
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      padding-top: 6px;
+    }
+
+    .time-slot {
+      min-height: 46px;
+      padding: 10px;
+      color: var(--royal-deep);
+      background: rgba(233, 244, 255, .9);
+      font-weight: 900;
+    }
+
+    .date-tab.closed,
+    .time-slot.disabled-slot {
+      opacity: .45;
+      text-decoration: line-through;
+    }
+
+    .empty-slots {
+      grid-column: 1 / -1;
+      padding: 14px;
+      border: 1px solid rgba(191, 239, 255, .24);
+      border-radius: 8px;
+      color: var(--sky-bright);
+      background: rgba(3, 20, 51, .38);
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .time-slot.extra {
+      display: none;
+    }
+
+    .schedule-card.show-more .time-slot.extra {
+      display: block;
+    }
+
+    .time-grid[hidden],
+    .time-toggle[hidden] {
+      display: none;
+    }
+
+    .schedule-card.form-open {
+      background:
+        linear-gradient(145deg, rgba(3, 20, 51, .96), rgba(8, 46, 104, .95) 48%, rgba(30, 95, 174, .86)) padding-box,
+        var(--metal-line) border-box;
+    }
+
+    .schedule-card.form-open .appointment-details {
+      margin-bottom: 12px;
+    }
+
+    .time-toggle {
+      width: 100%;
+      min-height: 44px;
+      margin-top: 12px;
+      border: 1px solid rgba(191, 239, 255, .34);
+      background: rgba(3, 20, 51, .36);
+      color: var(--sky-bright);
+      font-weight: 900;
+    }
+
+    .schedule-admin {
+      width: 100%;
+      min-height: 44px;
+      margin-top: 10px;
+      border: 1px solid rgba(191, 239, 255, .34);
+      border-radius: 8px;
+      color: var(--sky-bright);
+      background: rgba(3, 20, 51, .36);
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .selected-summary {
+      margin: 14px 0 0;
+      padding: 12px;
+      border: 1px solid rgba(191, 239, 255, .24);
+      border-radius: 8px;
+      color: var(--sky-bright);
+      background: rgba(3, 20, 51, .38);
+      font-weight: 850;
+    }
+
+    .appointment-form {
+      padding: 16px;
+      border: 0;
+      border-radius: 8px;
+      background: linear-gradient(145deg, rgba(233, 244, 255, .96), rgba(143, 177, 216, .82));
+      box-shadow: none;
+    }
+
+    .appointment-form input,
+    .appointment-form textarea,
+    .appointment-form select {
+      border-color: rgba(8, 46, 104, .22);
+      background: rgba(247, 251, 255, .92);
+      color: var(--royal-deep);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.82);
+    }
+
+    .appointment-form input::placeholder,
+    .appointment-form textarea::placeholder {
+      color: rgba(8, 46, 104, .62);
+    }
+
+    .appointment-form .btn {
+      color: var(--royal-deep);
+      background: linear-gradient(145deg, var(--sky-bright), var(--steel));
+    }
+
+    .form-panel-head {
+      display: grid;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .form-panel-head strong {
+      color: var(--sky-bright);
+      font-size: 18px;
+    }
+
+    .form-panel-head span {
+      color: var(--muted);
+      line-height: 1.45;
+      font-weight: 750;
+    }
+
+    .fixed-appointment-fields {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .fixed-appointment-value {
+      display: grid;
+      gap: 6px;
+      min-height: 70px;
+      padding: 14px;
+      border: 1px solid rgba(8, 46, 104, .22);
+      border-radius: 8px;
+      background: rgba(247, 251, 255, .92);
+      color: var(--royal-deep);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.82);
+      user-select: none;
+      cursor: default;
+    }
+
+    .fixed-appointment-value span {
+      font-size: 12px;
+      font-weight: 850;
+      text-transform: uppercase;
+      color: rgba(8, 46, 104, .62);
+    }
+
+    .fixed-appointment-value strong {
+      font-size: 18px;
+      line-height: 1.2;
+    }
+    @keyframes revealAppointment {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      color: var(--white);
+      background: linear-gradient(145deg, rgba(3, 20, 51, .92), rgba(8, 46, 104, .78));
+      outline: 0;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    input::placeholder, textarea::placeholder { color: rgba(201, 220, 255, .76); }
+    textarea { min-height: 132px; resize: vertical; grid-column: 1 / -1; }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--sky);
+      box-shadow:
+        0 0 0 3px rgba(191, 239, 255, .14),
+        inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    form .btn { grid-column: 1 / -1; }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding: 28px clamp(18px, 4vw, 58px);
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      background: rgba(3, 20, 51, .32);
+    }
+
+    .footer-admin {
+      min-height: 38px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .04);
+      cursor: pointer;
+      font-weight: 850;
+    }
+
+    .footer-admin:hover,
+    .footer-admin:focus-visible {
+      color: var(--white);
+      background: rgba(255, 255, 255, .08);
+      outline: none;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: 360px;
+      padding: 14px 16px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--white);
+      background:
+        linear-gradient(var(--royal-dark), var(--royal-dark)) padding-box,
+        var(--metal-line) border-box;
+      box-shadow: var(--shadow);
+      transform: translateY(140%);
+      transition: transform .22s ease;
+    }
+
+    .toast.show { transform: translateY(0); }
+
+    .floating-whatsapp {
+      position: fixed;
+      right: max(18px, env(safe-area-inset-right));
+      bottom: max(18px, env(safe-area-inset-bottom));
+      z-index: 40;
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--royal-deep);
+      background: linear-gradient(145deg, #eafff5, #53f2a9 62%, #19c678);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, .34);
+      font-weight: 950;
+    }
+
+    .floating-whatsapp svg {
+      width: 30px;
+      height: 30px;
+      fill: currentColor;
+    }
+
+    .thanks-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .thanks-actions .btn {
+      width: 100%;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    .specialists-modal,
+    .appointment-modal,
+    .admin-modal,
+    .access-modal,
+    .thanks-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      display: grid;
+      place-items: center;
+      padding:
+        max(18px, env(safe-area-inset-top))
+        max(18px, env(safe-area-inset-right))
+        max(18px, env(safe-area-inset-bottom))
+        max(18px, env(safe-area-inset-left));
+      background: rgba(2, 12, 34, .72);
+      backdrop-filter: blur(14px);
+    }
+
+    .specialists-modal[hidden],
+    .appointment-modal[hidden],
+    .admin-modal[hidden],
+    .access-modal[hidden],
+    .thanks-modal[hidden] {
+      display: none !important;
+    }
+
+    .specialists-panel,
+    .appointment-modal-panel,
+    .admin-modal-panel,
+    .access-modal-panel,
+    .thanks-modal-panel {
+      width: min(100%, 760px);
+      max-height: min(760px, calc(100dvh - 36px));
+      display: grid;
+      gap: 18px;
+      overflow-y: auto;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: clamp(18px, 4vw, 32px);
+      background:
+        linear-gradient(rgba(5, 34, 82, .96), rgba(3, 20, 51, .96)) padding-box,
+        var(--metal-line) border-box;
+      box-shadow: var(--shadow);
+    }
+
+    .specialists-head,
+    .appointment-modal-head,
+    .admin-modal-head,
+    .access-modal-head,
+    .thanks-modal-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .specialists-head h2,
+    .appointment-modal-head h2,
+    .admin-modal-head h2,
+    .access-modal-head h2,
+    .thanks-modal-head h2 {
+      margin-top: 6px;
+    }
+
+    .thanks-address {
+      display: grid;
+      gap: 6px;
+    }
+
+    .access-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .password-field {
+      position: relative;
+      display: grid;
+    }
+
+    .password-field input {
+      padding-right: 58px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 8px;
+      color: var(--sky-bright);
+      background: rgba(191, 239, 255, .12);
+      cursor: pointer;
+    }
+
+    .password-toggle:hover,
+    .password-toggle[aria-pressed="true"] {
+      background: rgba(191, 239, 255, .22);
+    }
+
+    .password-toggle svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .access-help {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .access-error {
+      min-height: 22px;
+      margin: 0;
+      color: #ffd1d1;
+      font-weight: 850;
+    }
+
+    .admin-tools {
+      display: grid;
+      gap: 14px;
+    }
+
+    .admin-field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .admin-field label {
+      color: var(--sky-bright);
+      font-weight: 900;
+    }
+
+    .admin-field select,
+    .admin-field select option {
+      color: var(--royal-deep);
+      background: var(--sky-bright);
+    }
+
+    .admin-field select {
+      border-color: rgba(191, 239, 255, .58);
+      box-shadow:
+        0 0 0 1px rgba(191, 239, 255, .2),
+        inset 0 1px 0 rgba(255,255,255,.82);
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .admin-check {
+      display: block;
+    }
+
+    .admin-check input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .admin-check span {
+      min-height: 46px;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .06);
+      cursor: pointer;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .admin-check input:checked + span {
+      color: var(--royal-deep);
+      background: linear-gradient(145deg, var(--sky-bright), var(--sky));
+    }
+
+    .icon-button {
+      flex: 0 0 auto;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--white);
+      background: rgba(255, 255, 255, .06);
+      cursor: pointer;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .specialist-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .specialist-tab {
+      min-height: 50px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .06);
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .specialist-tab.active {
+      color: var(--royal-deep);
+      background: linear-gradient(145deg, var(--sky-bright), var(--sky));
+    }
+
+    .specialist-card {
+      display: none;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .specialist-card.active {
+      display: grid;
+    }
+
+    .specialist-card h3 {
+      margin: 0;
+      font-size: clamp(24px, 4vw, 34px);
+    }
+
+    .specialist-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .specialist-person {
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(3, 20, 51, .32);
+    }
+
+    .specialist-photo {
+      min-height: 112px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(191, 239, 255, .32);
+      border-radius: 8px;
+      color: var(--royal-deep);
+      background:
+        radial-gradient(circle at 35% 24%, rgba(255,255,255,.9), transparent 34%),
+        linear-gradient(145deg, var(--sky-bright), var(--steel) 68%, var(--steel-dark));
+      text-align: center;
+      font-weight: 950;
+      line-height: 1.25;
+      padding: 10px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+    }
+
+    .specialist-photo span {
+      width: 64px;
+      height: 64px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255,255,255,.72);
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    .specialist-info {
+      display: grid;
+      gap: 6px;
+    }
+
+    .specialist-person strong {
+      display: block;
+      color: var(--white);
+      font-size: 19px;
+      line-height: 1.25;
+    }
+
+    .specialist-person span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .specialist-bio {
+      margin-top: 8px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .specialist-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .specialist-note {
+      color: var(--sky-bright);
+      font-weight: 850;
+    }
+
+    body.welcome-active {
+      overflow: hidden;
+    }
+
+    .welcome-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: grid;
+      place-items: center;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 22px;
+      padding:
+        max(22px, env(safe-area-inset-top))
+        max(22px, env(safe-area-inset-right))
+        max(22px, env(safe-area-inset-bottom))
+        max(22px, env(safe-area-inset-left));
+      background:
+        radial-gradient(circle at 22% 18%, rgba(191, 239, 255, .26), transparent 22rem),
+        radial-gradient(circle at 78% 72%, rgba(30, 95, 174, .38), transparent 28rem),
+        linear-gradient(145deg, #020c22, #082e68 58%, #1e5fae);
+      transition: opacity .35s ease, visibility .35s ease;
+    }
+
+    .welcome-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .welcome-panel {
+      width: min(100%, 780px);
+      min-height: min(720px, calc(100dvh - 44px));
+      display: grid;
+      align-content: center;
+      gap: 26px;
+      padding: clamp(22px, 5vw, 54px);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background:
+        linear-gradient(rgba(5, 34, 82, .9), rgba(3, 20, 51, .92)) padding-box,
+        var(--metal-line) border-box;
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .welcome-logo {
+      width: 78px;
+      height: 78px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: linear-gradient(145deg, var(--steel-bright), #9fc6ec 52%, #5e86b5);
+      padding: 8px;
+      box-shadow: 0 18px 42px rgba(0,0,0,.28);
+    }
+
+    .welcome-copy h2 {
+      margin: 0;
+      font-size: clamp(46px, 10vw, 92px);
+      line-height: .92;
+    }
+
+    .welcome-copy p {
+      max-width: 620px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 21px);
+      line-height: 1.6;
+    }
+
+    .welcome-intro {
+      display: grid;
+      gap: 26px;
+    }
+
+    .welcome-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .welcome-questions {
+      display: none;
+      gap: 18px;
+    }
+
+    .question-progress {
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+      font-weight: 850;
+    }
+
+    .question-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .question-tab {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(191, 239, 255, .2);
+      overflow: hidden;
+    }
+
+    .question-tab::before {
+      content: "";
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(145deg, var(--sky-bright), var(--sky));
+      transition: width .22s ease;
+    }
+
+    .question-tab.active::before,
+    .question-tab.done::before {
+      width: 100%;
+    }
+
+    .welcome-screen.questions-open .welcome-questions {
+      display: grid;
+    }
+
+    .welcome-screen.questions-open .welcome-intro {
+      display: none;
+    }
+
+    .welcome-screen.questions-open {
+      place-items: start center;
+    }
+
+    .welcome-screen.questions-open .welcome-panel {
+      min-height: auto;
+      align-content: start;
+    }
+
+    .question-card {
+      display: none;
+      gap: 10px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .question-card.active {
+      display: grid;
+    }
+
+    .question-card.final-step {
+      text-align: center;
+      justify-items: center;
+      padding-block: 28px;
+    }
+
+    .question-card.final-step strong {
+      font-size: clamp(26px, 6vw, 42px);
+      line-height: 1.05;
+    }
+
+    .question-card.final-step p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .question-card strong {
+      font-size: 18px;
+    }
+
+    .question-options {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .question-options input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .question-options span {
+      min-height: 48px;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      text-align: center;
+      font-weight: 800;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background .18s ease, border-color .18s ease, color .18s ease;
+    }
+
+    .question-options input:checked + span {
+      color: var(--royal-deep);
+      border-color: transparent;
+      background: linear-gradient(145deg, var(--sky-bright), var(--sky));
+    }
+
+    @media (max-width: 1020px) {
+      .price-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .schedule-contact { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 920px) {
+      .hero, .testimonials, .locations { grid-template-columns: 1fr; }
+      .grid, .price-grid, .comments-list { grid-template-columns: 1fr 1fr; }
+      .links a:not(.btn) { display: none; }
+      .section-head { align-items: start; flex-direction: column; }
+      .contact { max-width: 100%; }
+      .schedule-card { padding: 20px; }
+    }
+
+    @media (max-width: 620px) {
+      body { background-attachment: scroll; }
+      section { padding: 44px 16px; }
+      .nav {
+        padding:
+          max(10px, env(safe-area-inset-top))
+          max(14px, env(safe-area-inset-right))
+          10px
+          max(14px, env(safe-area-inset-left));
+        gap: 10px;
+      }
+      .brand {
+        min-width: 0;
+        font-size: 16px;
+        gap: 8px;
+      }
+      .logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+      }
+      .links { gap: 8px; }
+      .links .btn {
+        width: auto;
+        min-height: 40px;
+        padding: 10px 12px;
+        white-space: nowrap;
+      }
+      .hero {
+        min-height: auto;
+        padding: 30px 16px 44px;
+        gap: 16px;
+      }
+      .hero h1 {
+        margin: 12px 0;
+        font-size: clamp(34px, 11.5vw, 48px);
+        line-height: 1;
+      }
+      .lead {
+        font-size: 16px;
+        line-height: 1.62;
+      }
+      .actions { width: 100%; }
+      .hero-card-top, .doctor { padding: 14px; }
+      .doctor { gap: 14px; }
+      .doctor-visual { min-height: 170px; }
+      .doctor-visual svg { width: min(58%, 220px); }
+      .doctor h2 { font-size: 25px; }
+      .section-head {
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      h2 { font-size: clamp(27px, 9vw, 36px); }
+      .section-head p { line-height: 1.55; }
+      .grid, .price-grid, .facts, form, .comment-form, .comments-list, .appointment-details, .schedule-contact, .fixed-appointment-fields { grid-template-columns: 1fr; }
+      .comments-page-list { grid-template-columns: 1fr; }
+      .comments-page-head { align-items: start; flex-direction: column; }
+      .card {
+        min-height: auto;
+        padding: 16px;
+        gap: 18px;
+      }
+      .card h3 { font-size: 22px; }
+      .price {
+        min-height: auto;
+        padding: 14px;
+      }
+      .price h3 {
+        min-height: auto;
+        margin-bottom: 8px;
+        font-size: 17px;
+      }
+      .price strong {
+        margin-bottom: 8px;
+        font-size: 22px;
+      }
+      .quote {
+        min-height: auto;
+        padding: 18px;
+      }
+      .quote blockquote { font-size: 24px; }
+      .contact-box { padding: 16px; }
+      .time-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .date-carousel {
+        grid-template-columns: 36px minmax(0, 1fr) 36px;
+        gap: 6px;
+      }
+      .date-arrow {
+        min-height: 56px;
+        font-size: 28px;
+      }
+      .date-tabs {
+        gap: 6px;
+        scrollbar-width: none;
+      }
+      .date-tabs::-webkit-scrollbar { display: none; }
+      .date-tab {
+        flex-basis: min(38vw, 136px);
+        min-height: 56px;
+      }
+      .schedule-card {
+        padding: 14px;
+        border-radius: 8px;
+      }
+      .schedule-head {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .schedule-head h3 {
+        font-size: 25px;
+        line-height: 1.12;
+      }
+      .schedule-badge { align-self: flex-start; }
+      .detail-pill, .schedule-contact span { min-height: auto; }
+      .date-tab, .time-slot {
+        min-height: 58px;
+        padding: 10px 6px;
+      }
+      .appointment-form { padding: 12px; }
+      input, textarea, select {
+        min-height: 50px;
+        padding: 12px;
+        font-size: 16px;
+      }
+      textarea { min-height: 118px; }
+      textarea, form .btn, .comment-form .btn { grid-column: auto; }
+      .rating-field { min-height: auto; }
+      .star-rating label { font-size: 28px; }
+      .comment-card { min-height: auto; }
+      .map { height: auto; min-height: 220px; }
+      footer {
+        flex-direction: column;
+        padding:
+          24px
+          max(16px, env(safe-area-inset-right))
+          max(24px, env(safe-area-inset-bottom))
+          max(16px, env(safe-area-inset-left));
+      }
+      .btn {
+        width: 100%;
+        min-height: 50px;
+      }
+      .toast {
+        left: max(14px, env(safe-area-inset-left));
+        right: max(14px, env(safe-area-inset-right));
+        bottom: max(14px, env(safe-area-inset-bottom));
+        max-width: none;
+      }
+      .specialists-modal,
+      .appointment-modal,
+      .admin-modal,
+      .access-modal,
+      .thanks-modal {
+        place-items: start center;
+        padding:
+          max(14px, env(safe-area-inset-top))
+          max(14px, env(safe-area-inset-right))
+          max(14px, env(safe-area-inset-bottom))
+          max(14px, env(safe-area-inset-left));
+      }
+      .specialists-panel,
+      .appointment-modal-panel,
+      .admin-modal-panel,
+      .access-modal-panel,
+      .thanks-modal-panel {
+        max-height: calc(100dvh - 28px);
+      }
+      .admin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .specialist-tabs { grid-template-columns: 1fr; }
+      .specialist-person { grid-template-columns: 1fr; }
+      .specialist-photo { min-height: 150px; }
+      .welcome-screen {
+        align-items: start;
+        padding:
+          max(14px, env(safe-area-inset-top))
+          max(14px, env(safe-area-inset-right))
+          max(14px, env(safe-area-inset-bottom))
+          max(14px, env(safe-area-inset-left));
+      }
+      .welcome-panel {
+        width: 100%;
+        min-height: calc(100dvh - 28px);
+        padding: 18px;
+        gap: 18px;
+      }
+      .welcome-logo {
+        width: 60px;
+        height: 60px;
+      }
+      .welcome-intro { gap: 20px; }
+      .welcome-copy h2 {
+        font-size: clamp(40px, 14vw, 58px);
+        line-height: .96;
+      }
+      .welcome-copy p {
+        margin-top: 12px;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+      .welcome-actions { width: 100%; }
+      .welcome-questions { gap: 14px; }
+      .question-progress { gap: 8px; }
+      .question-card {
+        padding: 14px;
+        gap: 9px;
+      }
+      .question-card strong { font-size: 16px; }
+      .question-options { grid-template-columns: 1fr; }
+      .question-options span {
+        min-height: 46px;
+        padding: 9px 10px;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .time-grid { grid-template-columns: 1fr; }
+      .date-carousel { grid-template-columns: 32px minmax(0, 1fr) 32px; }
+      .date-arrow { min-height: 52px; font-size: 26px; }
+      .date-tab { flex-basis: 116px; }
+      .schedule-head h3 { font-size: 23px; }
+      .links .btn { padding-inline: 10px; font-size: 14px; }
+      .welcome-panel { padding: 16px; }
+      .welcome-copy h2 { font-size: clamp(36px, 13vw, 50px); }
+      .question-card { padding: 12px; }
+      .decor-item { opacity: .09; }
+      .decor-a { right: -72px; }
+      .decor-b { left: -76px; }
+      .decor-d, .decor-e { display: none; }
+      .section-decor { opacity: .08; }
+    }
+
+    @media (max-width: 480px) {
+      html { scroll-padding-top: 70px; }
+      section { scroll-margin-top: 70px; }
+      .nav {
+        min-height: 62px;
+      }
+      .brand {
+        max-width: 48%;
+      }
+      .brand span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .links .btn {
+        max-width: 168px;
+        min-height: 38px;
+        padding-inline: 10px;
+        font-size: 14px;
+      }
+      .hero h1 {
+        font-size: clamp(32px, 10.8vw, 44px);
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: .1em;
+      }
+      .hero-card-top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .status {
+        width: 100%;
+        text-align: center;
+      }
+      .facts {
+        gap: 8px;
+      }
+      .fact {
+        padding: 12px;
+      }
+      .map {
+        min-height: 210px;
+        padding: 16px;
+      }
+      .map strong {
+        font-size: 22px;
+      }
+      .map-actions {
+        width: 100%;
+      }
+      .map-actions a {
+        flex: 1 1 128px;
+        text-align: center;
+      }
+      .schedule-contact a,
+      .detail-pill strong {
+        overflow-wrap: anywhere;
+      }
+      .specialists-panel,
+      .appointment-modal-panel,
+      .admin-modal-panel,
+      .access-modal-panel,
+      .thanks-modal-panel {
+        width: 100%;
+        gap: 14px;
+        padding: 16px;
+      }
+      .specialists-head,
+      .appointment-modal-head,
+      .admin-modal-head,
+      .access-modal-head,
+      .thanks-modal-head {
+        gap: 10px;
+      }
+      .icon-button {
+        width: 42px;
+        height: 42px;
+      }
+      .appointment-form {
+        gap: 10px;
+      }
+      .admin-grid,
+      .time-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .admin-check span {
+        min-height: 44px;
+        padding: 9px;
+      }
+      .thanks-address.card {
+        padding: 14px;
+      }
+      .footer-admin {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 350px) {
+      .brand span { display: none; }
+      section { padding-inline: 12px; }
+      .hero { padding-inline: 12px; }
+      .schedule-card { padding: 12px; }
+      .date-carousel { grid-template-columns: 1fr; }
+      .date-arrow { display: none; }
+      .date-tab { flex-basis: 128px; }
+      .links .btn {
+        max-width: 140px;
+        font-size: 13px;
+      }
+      .hero h1 {
+        font-size: clamp(30px, 10vw, 38px);
+      }
+      .welcome-copy h2 {
+        font-size: clamp(34px, 12vw, 46px);
+      }
+      .admin-grid,
+      .time-grid {
+        grid-template-columns: 1fr;
+      }
+    }  </style>
+</head>
+<body class="welcome-active">
+  <div class="dental-decor" aria-hidden="true">
+    <svg class="decor-item decor-tooth decor-a" viewBox="0 0 220 210">
+      <path fill="#173b7a" d="M27 42c38-34 118-25 161 22 30 33 23 84-16 106-39 22-91 7-126-36C10 90-10 75 27 42Z"/>
+      <path fill="currentColor" d="M82 20c22-9 35 3 49 19 15 17 37 16 49 0 13-16 34-1 31 26-5 43-36 96-75 142-8 10-19 5-16-8l18-78c5-23-7-45-24-45-21 0-29 20-31 60-2 27-7 50-18 51-11 1-18-23-21-60-5-53 2-95 38-107Z"/>
+    </svg>
+    <svg class="decor-item decor-tooth decor-b" viewBox="0 0 220 210">
+      <path fill="#173b7a" d="M27 42c38-34 118-25 161 22 30 33 23 84-16 106-39 22-91 7-126-36C10 90-10 75 27 42Z"/>
+      <path fill="currentColor" d="M82 20c22-9 35 3 49 19 15 17 37 16 49 0 13-16 34-1 31 26-5 43-36 96-75 142-8 10-19 5-16-8l18-78c5-23-7-45-24-45-21 0-29 20-31 60-2 27-7 50-18 51-11 1-18-23-21-60-5-53 2-95 38-107Z"/>
+    </svg>
+    <svg class="decor-item decor-tooth decor-c" viewBox="0 0 220 210">
+      <path fill="#173b7a" d="M27 42c38-34 118-25 161 22 30 33 23 84-16 106-39 22-91 7-126-36C10 90-10 75 27 42Z"/>
+      <path fill="currentColor" d="M82 20c22-9 35 3 49 19 15 17 37 16 49 0 13-16 34-1 31 26-5 43-36 96-75 142-8 10-19 5-16-8l18-78c5-23-7-45-24-45-21 0-29 20-31 60-2 27-7 50-18 51-11 1-18-23-21-60-5-53 2-95 38-107Z"/>
+    </svg>
+    <svg class="decor-item decor-tool decor-d" viewBox="0 0 260 90">
+      <path fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" d="M18 72 168 20"/>
+      <circle cx="202" cy="25" r="31" fill="none" stroke="currentColor" stroke-width="10"/>
+      <path fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" d="M53 60 170 20"/>
+    </svg>
+    <svg class="decor-item decor-tool decor-e" viewBox="0 0 280 92">
+      <path fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" d="M20 72 150 28 258 54"/>
+      <path fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" d="M150 28 181 12"/>
+      <path fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" d="M238 49 264 36"/>
+    </svg>
+  </div>
+
+  <section class="welcome-screen" id="welcomeScreen" aria-label="Bienvenida Prodental">
+    <div class="welcome-panel">
+      <div class="welcome-intro">
+        <svg class="welcome-logo" viewBox="0 0 130 145" aria-label="Logo Prodental" role="img">
+          <path fill="#173b7a" d="M21 27c20-20 63-13 88 15 17 19 14 51-8 69-22 18-54 10-75-18C5 65 3 45 21 27Z"/>
+          <path fill="#b9e4ec" d="M47 25c11-5 18 1 26 10 9 10 22 9 29-1 7-9 20-1 18 15-2 25-20 58-42 87-5 7-12 4-10-4l10-47c3-14-5-27-14-27-12 0-17 12-18 36-1 16-4 30-10 31-6 1-10-13-12-35-3-32 1-58 23-65Z"/>
+        </svg>
+        <div class="welcome-copy">
+          <div class="eyebrow">Clínica dental</div>
+          <h2>Prodental</h2>
+          <p>Antes de agendar, contéstanos unas preguntas rápidas para orientarte mejor.</p>
+        </div>
+        <div class="welcome-actions">
+          <button class="btn" id="startQuestions" type="button">Iniciar</button>
+          <a class="btn secondary" href="#contacto" id="skipWelcome">Ir directo a agendar</a>
+        </div>
+      </div>
+
+      <form class="welcome-questions" id="welcomeQuestions">
+        <div class="welcome-copy">
+          <div class="eyebrow">Orientación rápida</div>
+          <h2>Cuida tu sonrisa</h2>
+          <p>Elige las opciones que mejor describan lo que necesitas.</p>
+        </div>
+
+        <div class="question-progress" aria-live="polite">
+          <span id="questionCount">Pregunta 1 de 3</span>
+          <div class="question-tabs" aria-hidden="true">
+            <span class="question-tab active"></span>
+            <span class="question-tab"></span>
+            <span class="question-tab"></span>
+            <span class="question-tab"></span>
+          </div>
+        </div>
+
+        <div class="question-card active" data-step="0">
+          <strong>Qué necesitas atender?</strong>
+          <div class="question-options">
+            <label><input type="radio" name="need" value="Primera visita Odontología"><span>Revisión</span></label>
+            <label><input type="radio" name="need" value="Limpieza dental"><span>Limpieza</span></label>
+            <label><input type="radio" name="need" value="Endodoncia"><span>Dolor dental</span></label>
+          </div>
+        </div>
+
+        <div class="question-card" data-step="1">
+          <strong>En qué sucursal te gustaría atenderte?</strong>
+          <div class="question-options">
+            <label><input type="radio" name="branch" value="Prodental Coatzacoalcos"><span>Coatzacoalcos</span></label>
+            <label><input type="radio" name="branch" value="Prodental Veracruz Pto."><span>Veracruz</span></label>
+            <label><input type="radio" name="branch" value=""><span>Aún no sé</span></label>
+          </div>
+        </div>
+
+        <div class="question-card" data-step="2">
+          <strong>Qué tan pronto buscas cita?</strong>
+          <div class="question-options">
+            <label><input type="radio" name="urgency" value="Lo antes posible"><span>Lo antes posible</span></label>
+            <label><input type="radio" name="urgency" value="Esta semana"><span>Esta semana</span></label>
+            <label><input type="radio" name="urgency" value="Estoy comparando opciones"><span>Estoy comparando</span></label>
+          </div>
+        </div>
+
+        <div class="question-card final-step" data-step="3">
+          <strong>Ver mi agenda</strong>
+          <p>Tus respuestas están listas. Ahora puedes elegir fecha, hora y completar tus datos.</p>
+        </div>
+
+        <div class="welcome-actions">
+          <button class="btn secondary" id="backQuestion" type="button">Regresar</button>
+          <button class="btn" id="finishQuestions" type="submit" hidden>Ver mi agenda</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <nav class="nav">
+    <a class="brand" href="#">
+      <svg class="logo" viewBox="0 0 130 145" aria-label="Logo Prodental" role="img">
+        <path fill="#173b7a" d="M21 27c20-20 63-13 88 15 17 19 14 51-8 69-22 18-54 10-75-18C5 65 3 45 21 27Z"/>
+        <path fill="#b9e4ec" d="M47 25c11-5 18 1 26 10 9 10 22 9 29-1 7-9 20-1 18 15-2 25-20 58-42 87-5 7-12 4-10-4l10-47c3-14-5-27-14-27-12 0-17 12-18 36-1 16-4 30-10 31-6 1-10-13-12-35-3-32 1-58 23-65Z"/>
+      </svg>
+      <span>Prodental</span>
+    </a>
+    <div class="links">
+      <a href="#servicios">Servicios</a>
+      <a href="#precios">Precios</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#comentarios">Comentarios</a>
+      <a href="#ubicaciones">Ubicaciones</a>
+      <a class="btn" href="#contacto">Agendar cita</a>
+    </div>
+  </nav>
+
+  <main>
+    <header class="hero" id="inicio">
+      <div>
+        <div class="eyebrow">Ortodoncia, odontología general y endodoncia</div>
+        <h1>Prodental cuida tu sonrisa con precisión y confianza.</h1>
+        <p class="lead">
+          Agenda tu cita en Coatzacoalcos o Veracruz Puerto con la Dra. María del Carmen
+          Canul Guzmán, dentista-odontóloga enfocada en tratamientos claros, cómodos y profesionales.
+        </p>
+        <div class="actions">
+          <a class="btn" href="#contacto">Agendar cita</a>
+          <a class="btn secondary" href="#precios">Ver precios</a>
+        </div>
+      </div>
+
+      <aside class="hero-card" aria-label="Información de Prodental">
+        <div class="hero-card-top">
+          <strong>Prodental</strong>
+          <span class="status">Agenda abierta</span>
+        </div>
+        <div class="doctor">
+          <div class="doctor-visual">
+            <svg viewBox="0 0 220 210" aria-hidden="true">
+              <path fill="#173b7a" d="M27 42c38-34 118-25 161 22 30 33 23 84-16 106-39 22-91 7-126-36C10 90-10 75 27 42Z"/>
+              <path fill="#b9e4ec" d="M82 20c22-9 35 3 49 19 15 17 37 16 49 0 13-16 34-1 31 26-5 43-36 96-75 142-8 10-19 5-16-8l18-78c5-23-7-45-24-45-21 0-29 20-31 60-2 27-7 50-18 51-11 1-18-23-21-60-5-53 2-95 38-107Z"/>
+            </svg>
+          </div>
+          <div>
+            <button class="specialists-trigger" id="openSpecialists" type="button">Conoce a nuestros especialistas</button>
+          </div>
+          <div class="facts">
+            <div class="fact"><strong>2</strong><span>sucursales</span></div>
+            <div class="fact"><strong>$600</strong><span>primera visita</span></div>
+            <div class="fact"><strong>3</strong><span>áreas de enfoque</span></div>
+          </div>
+        </div>
+      </aside>
+    </header>
+
+    <section id="servicios">
+      <svg class="section-decor tooth-small" viewBox="0 0 220 210" aria-hidden="true">
+        <path fill="#173b7a" d="M27 42c38-34 118-25 161 22 30 33 23 84-16 106-39 22-91 7-126-36C10 90-10 75 27 42Z"/>
+        <path fill="currentColor" d="M82 20c22-9 35 3 49 19 15 17 37 16 49 0 13-16 34-1 31 26-5 43-36 96-75 142-8 10-19 5-16-8l18-78c5-23-7-45-24-45-21 0-29 20-31 60-2 27-7 50-18 51-11 1-18-23-21-60-5-53 2-95 38-107Z"/>
+      </svg>
+      <div class="section-head">
+        <h2>Servicios dentales</h2>
+        <p>Tratamientos para prevenir, aliviar dolor, mejorar estética y recuperar función dental con explicación clara desde la primera cita.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <div>
+            <span class="tag">General</span>
+            <h3>Odontología general</h3>
+            <p>Primera visita, limpieza dental, resinas, extracciones y revisión completa.</p>
+          </div>
+        </article>
+        <article class="card">
+          <div>
+            <span class="tag">Ortodoncia</span>
+            <h3>Brackets y ortopedia</h3>
+            <p>Consulta de ortodoncia, brackets para niños, cerámica y ortodoncia convencional.</p>
+          </div>
+        </article>
+        <article class="card">
+          <div>
+            <span class="tag">Especialidad</span>
+            <h3>Endodoncia</h3>
+            <p>Tratamiento de conductos para conservar piezas dentales y atender dolor persistente.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="precios">
+      <svg class="section-decor tool-small" viewBox="0 0 260 90" aria-hidden="true">
+        <path fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" d="M18 72 168 20"/>
+        <circle cx="202" cy="25" r="31" fill="none" stroke="currentColor" stroke-width="10"/>
+        <path fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" d="M53 60 170 20"/>
+      </svg>
+      <div class="section-head">
+        <h2>Servicios y precios</h2>
+        <p>Precios de referencia. La doctora confirma el tratamiento ideal después de la valoración clínica.</p>
+      </div>
+      <div class="price-grid">
+        <article class="price"><h3>Primera visita Odontología</h3><strong>$600</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Exodoncia</h3><strong>Desde $1,000</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Profilaxis / Limpieza dental</h3><strong>Desde $1,200</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Tratamiento de endodoncia</h3><strong>Desde $3,000</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Blanqueamiento dental</h3><strong>Desde $1,500</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Brackets de cerámica</h3><strong>Desde $12,000</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Brackets para niños</h3><strong>Desde $5,000</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Carillas de porcelana</h3><strong>Desde $5,000</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Consulta de ortodoncia</h3><strong>Desde $800</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Coronas estéticas</h3><strong>Desde $2,500</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Diseño de sonrisa</h3><strong>Desde $600</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Endopostes de fibra de vidrio</h3><strong>Desde $1,500</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Extracción de muelas del juicio</h3><strong>Desde $2,500</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Guardas gnatológicas</h3><strong>Desde $5,500</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Ortodoncia convencional</h3><strong>Desde $6,000</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Resinas dentales</h3><strong>Desde $900</strong><a href="#contacto">Agendar cita</a></article>
+      </div>
+    </section>
+
+    <section id="nosotros">
+      <div class="section-head">
+        <h2>Sobre Prodental</h2>
+        <p>Atención dental profesional con trato cercano, información clara y opciones de tratamiento para cada etapa de tu sonrisa.</p>
+      </div>
+      <div class="testimonials">
+        <article class="quote">
+          <blockquote>"Me explicaron todo antes de empezar y la cita fue mucho más tranquila de lo que esperaba."</blockquote>
+          <cite>Paciente de Prodental</cite>
+        </article>
+        <article class="quote">
+          <blockquote>"Agendé rápido, me atendieron puntual y salí con un plan claro para mi tratamiento."</blockquote>
+          <cite>Paciente de Prodental</cite>
+        </article>
+      </div>
+    </section>
+
+    <section id="comentarios">
+      <div class="section-head">
+        <h2>Comentarios de pacientes</h2>
+        <p>Los pacientes pueden dejar su opinión sobre la atención recibida. Los comentarios se muestran en esta página y se guardan en este navegador.</p>
+      </div>
+      <form class="contact-box comment-form" id="commentForm">
+        <input type="text" name="patient" placeholder="Nombre del paciente" required />
+        <div class="rating-field">
+          <span>Calificación</span>
+          <div class="star-rating" aria-label="Calificación del paciente">
+            <input type="radio" id="rating-5" name="rating" value="5" required />
+            <label for="rating-5" title="5 estrellas">&#9733;</label>
+            <input type="radio" id="rating-4" name="rating" value="4" />
+            <label for="rating-4" title="4 estrellas">&#9733;</label>
+            <input type="radio" id="rating-3" name="rating" value="3" />
+            <label for="rating-3" title="3 estrellas">&#9733;</label>
+            <input type="radio" id="rating-2" name="rating" value="2" />
+            <label for="rating-2" title="2 estrellas">&#9733;</label>
+            <input type="radio" id="rating-1" name="rating" value="1" />
+            <label for="rating-1" title="1 estrella">&#9733;</label>
+          </div>
+        </div>
+        <textarea name="comment" placeholder="Escribe tu comentario sobre la atención recibida" required></textarea>
+        <button class="btn" type="submit">Publicar comentario</button>
+      </form>
+      <div class="comments-actions">
+        <a class="btn secondary" id="viewAllComments" href="?comments=all" target="_blank" rel="noopener">Ver todos los comentarios</a>
+      </div>
+      <div class="comments-list" id="commentsList" aria-live="polite"></div>
+    </section>
+
+    <section id="ubicaciones">
+      <div class="section-head">
+        <h2>Ubicaciones</h2>
+        <p>Elige la sucursal que te quede más cómoda y solicita tu cita desde el formulario.</p>
+      </div>
+      <div class="locations">
+        <article class="card">
+          <div>
+            <span class="tag">Dirección 1</span>
+            <h3>Prodental Coatzacoalcos</h3>
+            <p>Revolución 522, Centro, Coatzacoalcos.</p>
+            <div class="map">
+              <strong>Coatzacoalcos</strong>
+              <span>Abre la ubicación exacta en Google Maps para consultar ruta, tiempo de llegada y navegación.</span>
+              <div class="map-actions">
+                <a href="https://maps.app.goo.gl/8AFrk9e8ggineM7U7" target="_blank" rel="noreferrer">Abrir mapa</a>
+                <a class="secondary-map" href="https://www.google.com/maps/dir/?api=1&destination=Revolución%20522%2C%20Centro%2C%20Coatzacoalcos" target="_blank" rel="noreferrer">Iniciar ruta</a>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="card">
+          <div>
+            <span class="tag">Dirección 2</span>
+            <h3>Prodental Veracruz Pto.</h3>
+            <p>Bernal Díaz del Castillo 483, 1er Piso, Reforma, Veracruz Centro 91919.</p>
+            <div class="map">
+              <strong>Veracruz Puerto</strong>
+              <span>Abre la ubicación exacta en Google Maps para consultar ruta, tiempo de llegada y navegación.</span>
+              <div class="map-actions">
+                <a href="https://maps.app.goo.gl/D62UYqgPUaRiyaU8A" target="_blank" rel="noreferrer">Abrir mapa</a>
+                <a class="secondary-map" href="https://www.google.com/maps/dir/?api=1&destination=Bernal%20Diaz%20del%20Castillo%20483%2C%201er%20Piso%2C%20Reforma%2C%20Veracruz%20Centro%2091919" target="_blank" rel="noreferrer">Iniciar ruta</a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="contacto">
+      <svg class="section-decor tooth-small" viewBox="0 0 220 210" aria-hidden="true">
+        <path fill="#173b7a" d="M27 42c38-34 118-25 161 22 30 33 23 84-16 106-39 22-91 7-126-36C10 90-10 75 27 42Z"/>
+        <path fill="currentColor" d="M82 20c22-9 35 3 49 19 15 17 37 16 49 0 13-16 34-1 31 26-5 43-36 96-75 142-8 10-19 5-16-8l18-78c5-23-7-45-24-45-21 0-29 20-31 60-2 27-7 50-18 51-11 1-18-23-21-60-5-53 2-95 38-107Z"/>
+      </svg>
+      <div class="contact">
+        <div class="appointment-panel">
+          <div class="schedule-card" id="scheduleCard" aria-label="Horarios disponibles para cita">
+            <div class="schedule-head">
+              <div>
+                <span class="schedule-kicker">Agenda abierta</span>
+                <h3>Selecciona una fecha y horario exacto</h3>
+              </div>
+              <span class="schedule-badge">Primera visita $600</span>
+            </div>
+            <div class="appointment-details">
+              <div class="detail-pill"><span>Dirección</span><strong id="selectedLocationAddress">Revolución 522, Coatzacoalcos</strong></div>
+              <div class="detail-pill"><span>Servicio</span><strong id="selectedServiceLabel">Primera visita Odontología</strong></div>
+              <div class="detail-pill"><span>Aseguradora</span><strong>No acepta aseguradoras</strong></div>
+              <div class="detail-pill"><span>Especialista</span><strong>María del Carmen Canul Guzmán</strong></div>
+            </div>
+            <div class="schedule-contact">
+              <span><strong>Teléfono</strong><a href="tel:9211181380">921 118 1380</a></span>
+              <span><strong>WhatsApp</strong><a href="https://wa.me/529211181380" target="_blank" rel="noreferrer">Enviar mensaje</a></span>
+              <span><strong>Correo</strong><a href="mailto:factdental@hotmail.com">factdental@hotmail.com</a></span>
+            </div>
+            <div class="schedule-notes" aria-label="Información de atención">
+              <span>Horario de atención: lunes a sábado, 9:00 a.m. a 6:00 p.m.</span>
+              <span>La solicitud queda pendiente de confirmación por teléfono o WhatsApp.</span>
+            </div>
+            <div class="date-carousel" aria-label="Fechas disponibles">
+              <button class="date-arrow" id="prevDates" type="button" aria-label="Ver fechas anteriores">&#8249;</button>
+              <div class="date-tabs" id="dateTabs" role="tablist" aria-label="Fechas disponibles">
+                <button class="date-tab" type="button" data-date="2026-05-22" data-label="Hoy 22 May">Hoy<span>22 May</span></button>
+                <button class="date-tab" type="button" data-date="2026-05-23" data-label="Mañana 23 May">Mañana<span>23 May</span></button>
+                <button class="date-tab" type="button" data-date="2026-05-24" data-label="Dom 24 May">Dom<span>24 May</span></button>
+                <button class="date-tab" type="button" data-date="2026-05-25" data-label="Lun 25 May">Lun<span>25 May</span></button>
+                <button class="date-tab" type="button" data-date="2026-05-26" data-label="Mar 26 May">Mar<span>26 May</span></button>
+                <button class="date-tab" type="button" data-date="2026-05-27" data-label="Mié 27 May">Mié<span>27 May</span></button>
+                <button class="date-tab" type="button" data-date="2026-05-28" data-label="Jue 28 May">Jue<span>28 May</span></button>
+                <button class="date-tab" type="button" data-date="2026-05-29" data-label="Vie 29 May">Vie<span>29 May</span></button>
+                <button class="date-tab" type="button" data-date="2026-05-30" data-label="Sáb 30 May">Sáb<span>30 May</span></button>
+                <button class="date-tab" type="button" data-date="2026-05-31" data-label="Dom 31 May">Dom<span>31 May</span></button>
+                <button class="date-tab" type="button" data-date="2026-06-01" data-label="Lun 1 Jun">Lun<span>1 Jun</span></button>
+                <button class="date-tab" type="button" data-date="2026-06-02" data-label="Mar 2 Jun">Mar<span>2 Jun</span></button>
+                <button class="date-tab" type="button" data-date="2026-06-03" data-label="Mié 3 Jun">Mié<span>3 Jun</span></button>
+                <button class="date-tab" type="button" data-date="2026-06-04" data-label="Jue 4 Jun">Jue<span>4 Jun</span></button>
+                <button class="date-tab" type="button" data-date="2026-06-05" data-label="Vie 5 Jun">Vie<span>5 Jun</span></button>
+              </div>
+              <button class="date-arrow" id="nextDates" type="button" aria-label="Ver más fechas">&#8250;</button>
+            </div>
+            <div class="time-grid" id="appointmentTimes" aria-label="Horarios disponibles" hidden></div>
+            <button class="time-toggle" id="toggleTimes" type="button" hidden>Mostrar más horas</button>
+            <div class="selected-summary" id="selectedSummary">Toca una fecha para desplegar tus datos de cita.</div>
+
+            
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Prodental, 2026</span>
+    <span>Coatzacoalcos y Veracruz Puerto</span>
+    <button class="footer-admin" id="openScheduleAdmin" type="button">Acceso doctores</button>
+  </footer>
+  <section class="comments-page" id="allCommentsPage" hidden>
+    <div class="comments-page-head">
+      <div>
+        <div class="eyebrow">Prodental</div>
+        <h1>Todos los comentarios</h1>
+        <p>Opiniones acumuladas en este navegador sobre la atención recibida.</p>
+      </div>
+      <a class="btn secondary" href="./prodental-index.html#comentarios">Volver a la página</a>
+    </div>
+    <div class="comments-page-list" id="allCommentsList" aria-live="polite"></div>
+  </section>
+  <a class="floating-whatsapp" href="https://wa.me/529211181380?text=Hola%20Prodental%2C%20quiero%20agendar%20una%20cita" target="_blank" rel="noreferrer" aria-label="Enviar WhatsApp a Prodental">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12.04 2C6.58 2 2.13 6.33 2.13 11.65c0 1.7.47 3.36 1.35 4.82L2 22l5.72-1.44a10.1 10.1 0 0 0 4.32.96c5.46 0 9.91-4.33 9.91-9.65S17.5 2 12.04 2Zm0 17.83c-1.43 0-2.83-.37-4.05-1.07l-.29-.17-3.39.85.88-3.22-.19-.31a7.95 7.95 0 0 1-1.19-4.26c0-4.38 3.69-7.95 8.23-7.95s8.23 3.57 8.23 7.95-3.69 8.18-8.23 8.18Zm4.51-5.95c-.25-.12-1.47-.71-1.69-.79-.23-.08-.39-.12-.56.12-.16.24-.64.79-.78.95-.14.16-.29.18-.53.06-.25-.12-1.04-.37-1.98-1.18-.73-.64-1.22-1.43-1.36-1.67-.14-.24-.02-.37.11-.49.11-.11.25-.29.37-.43.12-.14.16-.24.25-.41.08-.16.04-.31-.02-.43-.06-.12-.56-1.31-.76-1.8-.2-.47-.4-.41-.56-.42h-.47c-.16 0-.43.06-.66.31-.23.24-.87.83-.87 2.02s.89 2.35 1.01 2.51c.12.16 1.75 2.6 4.24 3.65.59.25 1.06.4 1.42.51.6.18 1.14.16 1.57.1.48-.07 1.47-.58 1.68-1.15.21-.56.21-1.04.14-1.15-.06-.1-.22-.16-.47-.29Z"></path>
+    </svg>
+  </a>
+
+  <section class="specialists-modal" id="specialistsModal" aria-label="Especialistas de Prodental" hidden>
+    <div class="specialists-panel" role="dialog" aria-modal="true" aria-labelledby="specialistsTitle">
+      <div class="specialists-head">
+        <div>
+          <div class="eyebrow">Prodental</div>
+          <h2 id="specialistsTitle">Nuestros especialistas</h2>
+        </div>
+        <button class="icon-button" id="closeSpecialists" type="button" aria-label="Cerrar especialistas">&times;</button>
+      </div>
+
+      <div class="specialist-tabs" role="tablist" aria-label="Sucursales de especialistas">
+        <button class="specialist-tab active" type="button" data-specialist-tab="coatzacoalcos">Coatzacoalcos</button>
+        <button class="specialist-tab" type="button" data-specialist-tab="veracruz">Veracruz Puerto</button>
+      </div>
+
+      <article class="specialist-card active" data-specialist-panel="coatzacoalcos">
+        <span class="tag">Sucursal Coatzacoalcos</span>
+        <h3>Especialistas en Coatzacoalcos</h3>
+        <div class="specialist-list">
+          <div class="specialist-person">
+            <div class="specialist-photo"><span>MC</span></div>
+            <div class="specialist-info">
+              <strong>Dra. María del Carmen Canul Guzmán</strong>
+              <span>Odontóloga</span>
+              <p class="specialist-bio">Espacio para agregar su trayectoria, experiencia profesional, formación y una presentación más completa.</p>
+            </div>
+          </div>
+          <div class="specialist-person">
+            <div class="specialist-photo"><span>CG</span></div>
+            <div class="specialist-info">
+              <strong>Dr. Christopher García Cruz</strong>
+              <span>Endodoncista</span>
+              <p class="specialist-bio">Espacio para agregar su trayectoria, experiencia profesional, formación y una presentación más completa.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="specialist-card" data-specialist-panel="veracruz">
+        <span class="tag">Sucursal Veracruz Puerto</span>
+        <h3>Especialistas en Veracruz</h3>
+        <div class="specialist-list">
+          <div class="specialist-person">
+            <div class="specialist-photo"><span>CR</span></div>
+            <div class="specialist-info">
+              <strong>Dra. Carolina Reyes Lagunes</strong>
+              <span>Endodoncista</span>
+              <p class="specialist-bio">Espacio para agregar su trayectoria, experiencia profesional, formación y una presentación más completa.</p>
+            </div>
+          </div>
+          <div class="specialist-person">
+            <div class="specialist-photo"><span>VC</span></div>
+            <div class="specialist-info">
+              <strong>Dra. Vanesa Cabrera Canul</strong>
+              <span>Endodoncista</span>
+              <p class="specialist-bio">Espacio para agregar su trayectoria, experiencia profesional, formación y una presentación más completa.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="appointment-modal" id="appointmentModal" aria-label="Completa tus datos de cita" hidden>
+    <div class="appointment-modal-panel" role="dialog" aria-modal="true" aria-labelledby="appointmentModalTitle">
+      <div class="appointment-modal-head">
+        <div>
+          <div class="eyebrow">Solicitud de cita</div>
+          <h2 id="appointmentModalTitle">Completa tus datos</h2>
+        </div>
+        <button class="icon-button" id="closeAppointmentModal" type="button" aria-label="Cerrar formulario">&times;</button>
+      </div>
+
+      <div class="form-panel-head">
+        <strong>Fecha y hora seleccionadas</strong>
+        <span id="appointmentModalSummary">Elige una fecha y hora disponible para continuar.</span>
+      </div>
+
+      <form class="appointment-form" id="form" action="https://formspree.io/f/xojbpedo" method="POST">
+        <input type="hidden" name="_subject" value="Nueva solicitud de cita - Prodental" />
+        <input type="hidden" name="correo_destino" value="factdental@hotmail.com" />
+        <input type="text" name="name" placeholder="Tu nombre" required />
+        <input type="tel" name="phone" placeholder="Teléfono" required />
+        <input type="email" name="email" placeholder="Correo" required />
+        <select name="location" required>
+          <option value="">Sucursal</option>
+          <option selected>Prodental Coatzacoalcos</option>
+          <option>Prodental Veracruz Pto.</option>
+        </select>
+        <select name="service" required>
+          <option value="">Servicio</option>
+          <option selected>Primera visita Odontología</option>
+          <option>Consulta de ortodoncia</option>
+          <option>Limpieza dental</option>
+          <option>Endodoncia</option>
+          <option>Blanqueamiento dental</option>
+          <option>Brackets</option>
+          <option>Resinas dentales</option>
+          <option>Extracción dental</option>
+        </select>
+        <input id="appointmentDate" type="hidden" name="date" required />
+        <input id="appointmentTime" type="hidden" name="time" required />
+        <div class="fixed-appointment-fields" aria-label="Fecha y hora seleccionadas">
+          <div class="fixed-appointment-value"><span>Fecha</span><strong id="appointmentDateDisplay">Selecciona fecha</strong></div>
+          <div class="fixed-appointment-value"><span>Hora</span><strong id="appointmentTimeDisplay">Selecciona hora</strong></div>
+        </div>
+        <textarea name="message" placeholder="Cuéntanos si tienes dolor, dudas o algún detalle importante"></textarea>
+        <button class="btn" type="submit">Solicitar cita</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="access-modal" id="doctorAccessModal" aria-label="Acceso para doctores" hidden>
+    <div class="access-modal-panel" role="dialog" aria-modal="true" aria-labelledby="doctorAccessTitle">
+      <div class="access-modal-head">
+        <div>
+          <div class="eyebrow">Área privada</div>
+          <h2 id="doctorAccessTitle">Acceso doctores</h2>
+        </div>
+        <button class="icon-button" id="closeDoctorAccess" type="button" aria-label="Cerrar acceso">&times;</button>
+      </div>
+
+      <form class="access-form" id="doctorAccessForm">
+        <p class="access-help">Ingresa la clave para administrar días y horarios disponibles.</p>
+        <div class="password-field">
+          <input id="doctorPasscode" type="password" placeholder="Clave de acceso" autocomplete="current-password" required />
+          <button class="password-toggle" id="toggleDoctorPasscode" type="button" aria-label="Mostrar clave" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+        <p class="access-error" id="doctorAccessError" aria-live="polite"></p>
+        <button class="btn" type="submit">Entrar</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="admin-modal" id="scheduleAdminModal" aria-label="Administrar horarios" hidden>
+    <div class="admin-modal-panel" role="dialog" aria-modal="true" aria-labelledby="scheduleAdminTitle">
+      <div class="admin-modal-head">
+        <div>
+          <div class="eyebrow">Control de agenda</div>
+          <h2 id="scheduleAdminTitle">Administrar horarios</h2>
+        </div>
+        <button class="icon-button" id="closeScheduleAdmin" type="button" aria-label="Cerrar administración">&times;</button>
+      </div>
+
+      <div class="admin-tools">
+        <div class="admin-field">
+          <label for="adminLocationSelect">Sucursal</label>
+          <select id="adminLocationSelect" hidden>
+            <option value="Prodental Coatzacoalcos">Coatzacoalcos</option>
+            <option value="Prodental Veracruz Pto.">Veracruz Puerto</option>
+          </select>
+          <div class="specialist-tabs" aria-label="Sucursal para administrar">
+            <button class="specialist-tab admin-office-tab active" type="button" data-admin-location="Prodental Coatzacoalcos">Coatzacoalcos</button>
+            <button class="specialist-tab admin-office-tab" type="button" data-admin-location="Prodental Veracruz Pto.">Veracruz Puerto</button>
+          </div>
+        </div>
+
+        <div class="admin-field">
+          <label for="adminDateSelect">Fecha</label>
+          <select id="adminDateSelect"></select>
+        </div>
+
+        <label class="admin-check">
+          <input id="closeFullDay" type="checkbox" />
+          <span>Cerrar todo el día</span>
+        </label>
+
+        <div class="admin-field">
+          <label>Horarios deshabilitados</label>
+          <div class="admin-grid" id="adminTimeGrid"></div>
+        </div>
+
+        <button class="btn secondary" id="clearScheduleBlocks" type="button">Limpiar bloqueos de esta fecha</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="thanks-modal" id="thanksModal" aria-label="Cita solicitada" hidden>
+    <div class="thanks-modal-panel" role="dialog" aria-modal="true" aria-labelledby="thanksTitle">
+      <div class="thanks-modal-head">
+        <div>
+          <div class="eyebrow">Solicitud recibida</div>
+          <h2 id="thanksTitle">Solicitud recibida</h2>
+        </div>
+        <button class="icon-button" id="closeThanksModal" type="button" aria-label="Cerrar confirmación">&times;</button>
+      </div>
+
+      <p class="lead">Prodental se pondrá en contacto contigo pronto para confirmar tu cita.</p>
+
+      <article class="card thanks-address">
+        <div>
+          <span class="tag" id="thanksLocationTag">Dirección 1</span>
+          <h3 id="thanksLocationName">Prodental Coatzacoalcos</h3>
+          <p id="thanksAddress">Revolución 522, Centro, Coatzacoalcos.</p>
+          <div class="map">
+            <strong id="thanksMapTitle">Coatzacoalcos</strong>
+            <span>Abre la ubicación exacta en Google Maps para consultar ruta, tiempo de llegada y navegación.</span>
+            <div class="map-actions">
+              <a id="thanksMapLink" href="https://maps.app.goo.gl/8AFrk9e8ggineM7U7" target="_blank" rel="noreferrer">Abrir mapa</a>
+              <a class="secondary-map" id="thanksRouteLink" href="https://www.google.com/maps/dir/?api=1&destination=Revoluci%C3%B3n%20522%2C%20Centro%2C%20Coatzacoalcos" target="_blank" rel="noreferrer">Iniciar ruta</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <div class="thanks-actions">
+        <a class="btn" id="thanksWhatsappLink" href="https://wa.me/529211181380" target="_blank" rel="noreferrer">Enviar por WhatsApp</a>
+        <button class="btn secondary" id="finishThanks" type="button">Volver al inicio</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="toast" id="toast">Solicitud recibida. Te contactaremos para confirmar disponibilidad.</div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const APPOINTMENT_ENDPOINT = "https://formspree.io/f/xojbpedo";
+      const ADMIN_PASSCODE = "Prodental2026";
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
+      const toast = document.querySelector("#toast");
+      const openSpecialists = document.querySelector("#openSpecialists");
+      const specialistsModal = document.querySelector("#specialistsModal");
+      const closeSpecialists = document.querySelector("#closeSpecialists");
+      const appointmentModal = document.querySelector("#appointmentModal");
+      const closeAppointmentModalButton = document.querySelector("#closeAppointmentModal");
+      const appointmentModalSummary = document.querySelector("#appointmentModalSummary");
+      const thanksModal = document.querySelector("#thanksModal");
+      const closeThanksModalButton = document.querySelector("#closeThanksModal");
+      const finishThanks = document.querySelector("#finishThanks");
+      const thanksWhatsappLink = document.querySelector("#thanksWhatsappLink");
+      const thanksAddress = document.querySelector("#thanksAddress");
+      const thanksLocationTag = document.querySelector("#thanksLocationTag");
+      const thanksLocationName = document.querySelector("#thanksLocationName");
+      const thanksMapTitle = document.querySelector("#thanksMapTitle");
+      const thanksMapLink = document.querySelector("#thanksMapLink");
+      const thanksRouteLink = document.querySelector("#thanksRouteLink");
+      const openScheduleAdmin = document.querySelector("#openScheduleAdmin");
+      const doctorAccessModal = document.querySelector("#doctorAccessModal");
+      const closeDoctorAccess = document.querySelector("#closeDoctorAccess");
+      const doctorAccessForm = document.querySelector("#doctorAccessForm");
+      const doctorPasscode = document.querySelector("#doctorPasscode");
+      const toggleDoctorPasscode = document.querySelector("#toggleDoctorPasscode");
+      const doctorAccessError = document.querySelector("#doctorAccessError");
+      const scheduleAdminModal = document.querySelector("#scheduleAdminModal");
+      const closeScheduleAdmin = document.querySelector("#closeScheduleAdmin");
+      const adminLocationSelect = document.querySelector("#adminLocationSelect");
+      const adminOfficeTabs = Array.from(document.querySelectorAll(".admin-office-tab"));
+      const adminDateSelect = document.querySelector("#adminDateSelect");
+      const closeFullDay = document.querySelector("#closeFullDay");
+      const adminTimeGrid = document.querySelector("#adminTimeGrid");
+      const clearScheduleBlocks = document.querySelector("#clearScheduleBlocks");
+      const specialistTabs = Array.from(document.querySelectorAll(".specialist-tab"));
+      const specialistPanels = Array.from(document.querySelectorAll(".specialist-card"));
+      const welcomeScreen = document.querySelector("#welcomeScreen");
+      const startQuestions = document.querySelector("#startQuestions");
+      const skipWelcome = document.querySelector("#skipWelcome");
+      const welcomeQuestions = document.querySelector("#welcomeQuestions");
+      const backQuestion = document.querySelector("#backQuestion");
+      const finishQuestions = document.querySelector("#finishQuestions");
+      const questionCount = document.querySelector("#questionCount");
+      const questionCards = Array.from(document.querySelectorAll(".question-card"));
+      const questionTabs = Array.from(document.querySelectorAll(".question-tab"));
+      const form = document.querySelector("#form");
+      const commentForm = document.querySelector("#commentForm");
+      const commentsList = document.querySelector("#commentsList");
+      const allCommentsPage = document.querySelector("#allCommentsPage");
+      const allCommentsList = document.querySelector("#allCommentsList");
+      const scheduleCard = document.querySelector("#scheduleCard");
+      const dateTabsContainer = document.querySelector("#dateTabs");
+      const prevDatesButton = document.querySelector("#prevDates");
+      const nextDatesButton = document.querySelector("#nextDates");
+      let dateTabs = [];
+      const appointmentTimes = document.querySelector("#appointmentTimes");
+      const toggleTimes = document.querySelector("#toggleTimes");
+      const selectedSummary = document.querySelector("#selectedSummary");
+      const appointmentDate = document.querySelector("#appointmentDate");
+      const appointmentTime = document.querySelector("#appointmentTime");
+      const appointmentDateDisplay = document.querySelector("#appointmentDateDisplay");
+      const appointmentTimeDisplay = document.querySelector("#appointmentTimeDisplay");
+      const locationSelect = document.querySelector("select[name='location']");
+      const selectedLocationAddress = document.querySelector("#selectedLocationAddress");
+      const serviceSelect = document.querySelector("select[name='service']");
+      const selectedServiceLabel = document.querySelector("#selectedServiceLabel");
+      let activeQuestion = 0;
+
+      const setSpecialistTab = (target) => {
+        specialistTabs.forEach((tab) => {
+          tab.classList.toggle("active", tab.dataset.specialistTab === target);
+        });
+        specialistPanels.forEach((panel) => {
+          panel.classList.toggle("active", panel.dataset.specialistPanel === target);
+        });
+      };
+
+      const openSpecialistsModal = () => {
+        if (!specialistsModal) return;
+        specialistsModal.hidden = false;
+        document.body.classList.add("modal-open");
+      };
+
+      const closeSpecialistsModal = () => {
+        if (!specialistsModal) return;
+        specialistsModal.hidden = true;
+        document.body.classList.remove("modal-open");
+      };
+
+      const openAppointmentModal = () => {
+        if (!appointmentModal) return;
+        appointmentModal.hidden = false;
+        document.body.classList.add("modal-open");
+      };
+
+      const closeAppointmentModal = () => {
+        if (!appointmentModal) return;
+        appointmentModal.hidden = true;
+        document.body.classList.remove("modal-open");
+      };
+
+      const openThanksModal = (locationName, whatsappUrl = "https://wa.me/529211181380") => {
+        if (!thanksModal) return;
+        const card = locationCards[locationName] || locationCards["Prodental Coatzacoalcos"];
+        if (thanksLocationTag) thanksLocationTag.textContent = card.tag;
+        if (thanksLocationName) thanksLocationName.textContent = card.name;
+        if (thanksAddress) thanksAddress.textContent = card.address;
+        if (thanksMapTitle) thanksMapTitle.textContent = card.mapTitle;
+        if (thanksMapLink) thanksMapLink.href = card.mapUrl;
+        if (thanksRouteLink) thanksRouteLink.href = card.routeUrl;
+        if (thanksWhatsappLink) thanksWhatsappLink.href = whatsappUrl;
+        thanksModal.hidden = false;
+        document.body.classList.add("modal-open");
+      };
+
+      const closeThanksModal = () => {
+        if (!thanksModal) return;
+        thanksModal.hidden = true;
+        document.body.classList.remove("modal-open");
+      };
+
+      const openScheduleAdminModal = () => {
+        if (!scheduleAdminModal) return;
+        scheduleAdminModal.hidden = false;
+        document.body.classList.add("modal-open");
+      };
+
+      const closeScheduleAdminModal = () => {
+        if (!scheduleAdminModal) return;
+        scheduleAdminModal.hidden = true;
+        document.body.classList.remove("modal-open");
+      };
+
+      const openDoctorAccessModal = () => {
+        if (!doctorAccessModal) return;
+        doctorAccessModal.hidden = false;
+        document.body.classList.add("modal-open");
+        if (doctorAccessError) doctorAccessError.textContent = "";
+        if (doctorPasscode) {
+          doctorPasscode.value = "";
+          doctorPasscode.type = "password";
+        }
+        if (toggleDoctorPasscode) {
+          toggleDoctorPasscode.setAttribute("aria-label", "Mostrar clave");
+          toggleDoctorPasscode.setAttribute("aria-pressed", "false");
+        }
+        window.setTimeout(() => doctorPasscode?.focus(), 80);
+      };
+
+      const closeDoctorAccessModal = () => {
+        if (!doctorAccessModal) return;
+        doctorAccessModal.hidden = true;
+        document.body.classList.remove("modal-open");
+        if (doctorAccessForm) doctorAccessForm.reset();
+        if (doctorPasscode) doctorPasscode.type = "password";
+        if (toggleDoctorPasscode) {
+          toggleDoctorPasscode.setAttribute("aria-label", "Mostrar clave");
+          toggleDoctorPasscode.setAttribute("aria-pressed", "false");
+        }
+      };
+
+      openSpecialists?.addEventListener("click", openSpecialistsModal);
+      closeSpecialists?.addEventListener("click", closeSpecialistsModal);
+      specialistsModal?.addEventListener("click", (event) => {
+        if (event.target === specialistsModal) closeSpecialistsModal();
+      });
+      closeAppointmentModalButton?.addEventListener("click", closeAppointmentModal);
+      appointmentModal?.addEventListener("click", (event) => {
+        if (event.target === appointmentModal) closeAppointmentModal();
+      });
+      closeThanksModalButton?.addEventListener("click", closeThanksModal);
+      thanksModal?.addEventListener("click", (event) => {
+        if (event.target === thanksModal) closeThanksModal();
+      });
+      finishThanks?.addEventListener("click", () => {
+        closeThanksModal();
+        document.querySelector("#inicio")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      openScheduleAdmin?.addEventListener("click", openDoctorAccessModal);
+      toggleDoctorPasscode?.addEventListener("click", () => {
+        if (!doctorPasscode) return;
+        const shouldShow = doctorPasscode.type === "password";
+        doctorPasscode.type = shouldShow ? "text" : "password";
+        toggleDoctorPasscode.setAttribute("aria-label", shouldShow ? "Ocultar clave" : "Mostrar clave");
+        toggleDoctorPasscode.setAttribute("aria-pressed", String(shouldShow));
+        doctorPasscode.focus();
+      });
+      closeDoctorAccess?.addEventListener("click", closeDoctorAccessModal);
+      doctorAccessModal?.addEventListener("click", (event) => {
+        if (event.target === doctorAccessModal) closeDoctorAccessModal();
+      });
+      doctorAccessForm?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (doctorPasscode?.value.trim() === ADMIN_PASSCODE) {
+          closeDoctorAccessModal();
+          openScheduleAdminModal();
+          return;
+        }
+        if (doctorAccessError) doctorAccessError.textContent = "Clave incorrecta. Intenta de nuevo.";
+      });
+      closeScheduleAdmin?.addEventListener("click", closeScheduleAdminModal);
+      scheduleAdminModal?.addEventListener("click", (event) => {
+        if (event.target === scheduleAdminModal) closeScheduleAdminModal();
+      });
+      specialistTabs.forEach((tab) => {
+        tab.addEventListener("click", () => setSpecialistTab(tab.dataset.specialistTab));
+      });
+
+      const updateQuestionStep = (step) => {
+        if (!questionCards.length) return;
+        activeQuestion = Math.min(Math.max(step, 0), questionCards.length - 1);
+        questionCards.forEach((card, index) => {
+          card.classList.toggle("active", index === activeQuestion);
+        });
+        questionTabs.forEach((tab, index) => {
+          tab.classList.toggle("active", index === activeQuestion);
+          tab.classList.toggle("done", index < activeQuestion);
+        });
+        const isFinalStep = activeQuestion === questionCards.length - 1;
+        if (questionCount) {
+          questionCount.textContent = isFinalStep ? "Listo para agendar" : `Pregunta ${activeQuestion + 1} de ${questionCards.length - 1}`;
+        }
+        if (backQuestion) backQuestion.textContent = activeQuestion === 0 ? "Regresar" : "Anterior";
+        if (finishQuestions) finishQuestions.hidden = !isFinalStep;
+      };
+
+      const closeWelcome = (target = "#inicio") => {
+        welcomeScreen?.classList.add("hidden");
+        document.body.classList.remove("welcome-active");
+        window.setTimeout(() => {
+          if (target) document.querySelector(target)?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 160);
+      };
+
+      startQuestions?.addEventListener("click", () => {
+        welcomeScreen?.classList.add("questions-open");
+        updateQuestionStep(0);
+      });
+
+      backQuestion?.addEventListener("click", () => {
+        if (activeQuestion === 0) {
+          welcomeScreen?.classList.remove("questions-open");
+          return;
+        }
+        updateQuestionStep(activeQuestion - 1);
+      });
+
+      welcomeQuestions?.addEventListener("change", (event) => {
+        if (!event.target.matches("input[type='radio']")) return;
+        if (activeQuestion < questionCards.length - 1) {
+          window.setTimeout(() => updateQuestionStep(activeQuestion + 1), 180);
+        }
+      });
+
+      skipWelcome?.addEventListener("click", (event) => {
+        event.preventDefault();
+        closeWelcome("#inicio");
+      });
+
+      const showToast = (message) => {
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add("show");
+        window.setTimeout(() => toast.classList.remove("show"), 3600);
+      };
+
+      const locationAddresses = {
+        "Prodental Coatzacoalcos": "Revolución 522, Coatzacoalcos",
+        "Prodental Veracruz Pto.": "Bernal Díaz del Castillo 483, 1er Piso, Reforma, Veracruz Centro 91919"
+      };
+      const locationCards = {
+        "Prodental Coatzacoalcos": {
+          tag: "Dirección 1",
+          name: "Prodental Coatzacoalcos",
+          address: "Revolución 522, Centro, Coatzacoalcos.",
+          mapTitle: "Coatzacoalcos",
+          mapUrl: "https://maps.app.goo.gl/8AFrk9e8ggineM7U7",
+          routeUrl: "https://www.google.com/maps/dir/?api=1&destination=Revoluci%C3%B3n%20522%2C%20Centro%2C%20Coatzacoalcos"
+        },
+        "Prodental Veracruz Pto.": {
+          tag: "Dirección 2",
+          name: "Prodental Veracruz Pto.",
+          address: "Bernal Díaz del Castillo 483, 1er Piso, Reforma, Veracruz Centro 91919.",
+          mapTitle: "Veracruz Puerto",
+          mapUrl: "https://maps.app.goo.gl/D62UYqgPUaRiyaU8A",
+          routeUrl: "https://www.google.com/maps/dir/?api=1&destination=Bernal%20D%C3%ADaz%20del%20Castillo%20483%2C%201er%20Piso%2C%20Reforma%2C%20Veracruz%20Centro%2091919"
+        }
+      };
+
+      const WHATSAPP_NUMBER = "529211181380";
+      const buildWhatsappUrl = (appointmentData) => {
+        const lines = [
+          "Hola Prodental, solicité una cita desde la página.",
+          `Nombre: ${appointmentData.name || ""}`,
+          `Teléfono: ${appointmentData.phone || ""}`,
+          `Correo: ${appointmentData.email || ""}`,
+          `Sucursal: ${appointmentData.location || ""}`,
+          `Servicio: ${appointmentData.service || ""}`,
+          `Fecha: ${appointmentData.date || ""}`,
+          `Hora: ${appointmentData.time || ""}`
+        ];
+        if (appointmentData.message) lines.push(`Mensaje: ${appointmentData.message}`);
+        lines.push("Quedo pendiente de confirmación.");
+        return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
+      };
+
+      const updateSelectedLocation = () => {
+        if (!locationSelect || !selectedLocationAddress) return;
+        selectedLocationAddress.textContent = locationAddresses[locationSelect.value] || "Selecciona una sucursal";
+      };
+
+      locationSelect?.addEventListener("change", updateSelectedLocation);
+      updateSelectedLocation();
+
+      const updateSelectedService = () => {
+        if (!serviceSelect || !selectedServiceLabel) return;
+        const service = serviceSelect.value || "Selecciona un servicio";
+        selectedServiceLabel.textContent = service;
+      };
+
+      serviceSelect?.addEventListener("change", updateSelectedService);
+      updateSelectedService();
+
+      welcomeQuestions?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const data = new FormData(welcomeQuestions);
+        const need = data.get("need");
+        const branch = data.get("branch");
+        const urgency = data.get("urgency");
+        if (!need || !branch || !urgency) {
+          showToast("Selecciona una opción en cada pregunta para continuar.");
+          updateQuestionStep(!need ? 0 : !branch ? 1 : 2);
+          return;
+        }
+        if (serviceSelect && need) {
+          serviceSelect.value = need;
+          updateSelectedService();
+        }
+        if (locationSelect && branch) {
+          locationSelect.value = branch;
+          updateSelectedLocation();
+        }
+        const message = form?.querySelector("textarea[name='message']");
+        if (message && urgency) {
+          message.value = `Me gustaría una cita: ${urgency}.`;
+        }
+        showToast("Listo. Preparamos la agenda con tus respuestas.");
+        closeWelcome("#inicio");
+      });
+
+      const baseSlots = ["09:00", "09:20", "09:40", "10:00", "10:20", "10:40", "11:00", "11:20", "11:40", "12:00", "12:20", "12:40", "13:00", "16:00", "16:20", "16:40", "17:00", "17:20", "17:40", "18:00"];
+      const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+      const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+      let scheduleTodayKey = "";
+      let scheduleDays = [];
+      let appointmentSlots = {};
+
+      const getIsoDate = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
+      const buildScheduleDays = () => {
+        const scheduleStartDate = new Date();
+        scheduleStartDate.setHours(0, 0, 0, 0);
+        scheduleTodayKey = getIsoDate(scheduleStartDate);
+        scheduleDays = [];
+        let dayOffset = 0;
+        while (scheduleDays.length < 15) {
+          const date = new Date(scheduleStartDate);
+          date.setDate(scheduleStartDate.getDate() + dayOffset);
+          dayOffset += 1;
+          if (date.getDay() === 0) continue;
+          const iso = getIsoDate(date);
+          const index = scheduleDays.length;
+          const label = index === 0 ? "Hoy" : index === 1 ? "Mañana" : dayNames[date.getDay()];
+          scheduleDays.push({
+            iso,
+            label,
+            display: `${date.getDate()} ${monthNames[date.getMonth()]}`,
+            fullLabel: `${label} ${date.getDate()} ${monthNames[date.getMonth()]}`
+          });
+        }
+        appointmentSlots = scheduleDays.reduce((slotsByDate, day, index) => {
+          const offset = index % 4;
+          slotsByDate[day.iso] = baseSlots.filter((_, slotIndex) => (slotIndex + offset) % 5 !== 0);
+          return slotsByDate;
+        }, {});
+      };
+
+      buildScheduleDays();
+      const scheduleBlocksKey = "prodentalScheduleBlocks";
+      let scheduleBlocks = {};
+
+      const loadScheduleBlocks = () => {
+        try {
+          return JSON.parse(localStorage.getItem(scheduleBlocksKey) || "{}") || {};
+        } catch (error) {
+          return {};
+        }
+      };
+
+      const saveScheduleBlocks = () => {
+        localStorage.setItem(scheduleBlocksKey, JSON.stringify(scheduleBlocks));
+      };
+
+      const getBlockKey = (location, date) => `${location || "Prodental Coatzacoalcos"}|${date}`;
+      const getDayBlock = (date, location = locationSelect?.value) => scheduleBlocks[getBlockKey(location, date)] || { closed: false, times: [] };
+
+      scheduleBlocks = loadScheduleBlocks();
+
+      let selectedDate = "";
+      let selectedDateLabel = "";
+
+      const renderDateTabs = () => {
+        if (!dateTabsContainer) return;
+        dateTabsContainer.innerHTML = scheduleDays.map((day) => `
+          <button class="date-tab${getDayBlock(day.iso).closed ? " closed" : ""}" type="button" data-date="${day.iso}" data-label="${day.fullLabel}">${day.label}<span>${day.display}</span></button>
+        `).join("");
+        dateTabs = Array.from(dateTabsContainer.querySelectorAll(".date-tab"));
+      };
+
+      const renderAdminDates = () => {
+        if (!adminDateSelect) return;
+        adminDateSelect.innerHTML = scheduleDays.map((day) => `
+          <option value="${day.iso}">${day.fullLabel}</option>
+        `).join("");
+      };
+
+      const renderAdminTimes = () => {
+        if (!adminDateSelect || !adminTimeGrid || !closeFullDay) return;
+        const date = adminDateSelect.value || scheduleDays[0]?.iso || "";
+        const block = getDayBlock(date, adminLocationSelect?.value);
+        closeFullDay.checked = Boolean(block.closed);
+        const slots = appointmentSlots[date] || [];
+        adminTimeGrid.innerHTML = slots.map((slot) => `
+          <label class="admin-check">
+            <input type="checkbox" value="${slot}" ${block.times?.includes(slot) ? "checked" : ""} />
+            <span>${slot}</span>
+          </label>
+        `).join("");
+      };
+
+      const updateCurrentSchedule = () => {
+        renderDateTabs();
+        if (selectedDate) {
+          dateTabs.find((tab) => tab.dataset.date === selectedDate)?.classList.add("active");
+          renderAppointmentTimes();
+        }
+      };
+
+      locationSelect?.addEventListener("change", updateCurrentSchedule);
+
+      const scrollDateTabs = (direction) => {
+        if (!dateTabsContainer) return;
+        const distance = Math.max(dateTabsContainer.clientWidth * .78, 180);
+        dateTabsContainer.scrollBy({ left: direction * distance, behavior: "smooth" });
+      };
+
+      prevDatesButton?.addEventListener("click", () => scrollDateTabs(-1));
+      nextDatesButton?.addEventListener("click", () => scrollDateTabs(1));
+
+      const openAppointmentDetails = () => {
+        scheduleCard?.classList.add("form-open");
+        if (appointmentTimes) appointmentTimes.hidden = false;
+        if (toggleTimes) toggleTimes.hidden = false;
+      };
+
+      const renderAppointmentTimes = () => {
+        if (!appointmentTimes || !toggleTimes || !scheduleCard) return;
+        const block = getDayBlock(selectedDate);
+        const slots = block.closed ? [] : (appointmentSlots[selectedDate] || []).filter((slot) => !block.times?.includes(slot));
+        appointmentTimes.innerHTML = slots.length ? slots.map((slot, index) => `
+          <button class="time-slot${index > 3 ? " extra" : ""}" type="button" data-time="${slot}">${slot}</button>
+        `).join("") : `<div class="empty-slots">No hay horarios disponibles para esta fecha.</div>`;
+        scheduleCard.classList.remove("show-more");
+        toggleTimes.textContent = "Mostrar más horas";
+        toggleTimes.hidden = slots.length <= 4;
+      };
+
+      renderDateTabs();
+      renderAdminDates();
+      renderAdminTimes();
+
+      const refreshScheduleForCurrentDay = () => {
+        const now = new Date();
+        const currentDayKey = getIsoDate(now);
+        if (currentDayKey === scheduleTodayKey) return;
+        buildScheduleDays();
+        selectedDate = "";
+        selectedDateLabel = "";
+        if (appointmentDate) appointmentDate.value = "";
+        if (appointmentTime) appointmentTime.value = "";
+        if (appointmentDateDisplay) appointmentDateDisplay.textContent = "Selecciona fecha";
+        if (appointmentTimeDisplay) appointmentTimeDisplay.textContent = "Selecciona hora";
+        if (appointmentTimes) {
+          appointmentTimes.hidden = true;
+          appointmentTimes.innerHTML = "";
+        }
+        if (toggleTimes) toggleTimes.hidden = true;
+        scheduleCard?.classList.remove("form-open", "show-more");
+        if (selectedSummary) selectedSummary.textContent = "Toca una fecha para desplegar tus datos de cita.";
+        renderDateTabs();
+        renderAdminDates();
+        renderAdminTimes();
+      };
+
+      window.setInterval(refreshScheduleForCurrentDay, 60000);
+      window.addEventListener("focus", refreshScheduleForCurrentDay);
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) refreshScheduleForCurrentDay();
+      });
+
+      adminDateSelect?.addEventListener("change", renderAdminTimes);
+      adminLocationSelect?.addEventListener("change", renderAdminTimes);
+      adminOfficeTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          if (adminLocationSelect) adminLocationSelect.value = tab.dataset.adminLocation || "";
+          adminOfficeTabs.forEach((item) => item.classList.toggle("active", item === tab));
+          renderAdminTimes();
+        });
+      });
+
+      closeFullDay?.addEventListener("change", () => {
+        const date = adminDateSelect?.value;
+        if (!date) return;
+        const key = getBlockKey(adminLocationSelect?.value, date);
+        const block = getDayBlock(date, adminLocationSelect?.value);
+        scheduleBlocks[key] = { ...block, closed: closeFullDay.checked };
+        saveScheduleBlocks();
+        updateCurrentSchedule();
+        renderAdminTimes();
+      });
+
+      adminTimeGrid?.addEventListener("change", () => {
+        const date = adminDateSelect?.value;
+        if (!date) return;
+        const times = Array.from(adminTimeGrid.querySelectorAll("input:checked")).map((item) => item.value);
+        const key = getBlockKey(adminLocationSelect?.value, date);
+        const block = getDayBlock(date, adminLocationSelect?.value);
+        scheduleBlocks[key] = { ...block, times };
+        saveScheduleBlocks();
+        updateCurrentSchedule();
+      });
+
+      clearScheduleBlocks?.addEventListener("click", () => {
+        const date = adminDateSelect?.value;
+        if (!date) return;
+        delete scheduleBlocks[getBlockKey(adminLocationSelect?.value, date)];
+        saveScheduleBlocks();
+        updateCurrentSchedule();
+        renderAdminTimes();
+      });
+
+      dateTabsContainer?.addEventListener("click", (event) => {
+        const tab = event.target.closest(".date-tab");
+        if (!tab) return;
+        dateTabs.forEach((item) => item.classList.remove("active"));
+        tab.classList.add("active");
+        selectedDate = tab.dataset.date || "";
+        selectedDateLabel = tab.dataset.label || tab.textContent.trim();
+        if (appointmentDate) appointmentDate.value = selectedDate;
+        if (appointmentTime) appointmentTime.value = "";
+        if (appointmentDateDisplay) appointmentDateDisplay.textContent = selectedDateLabel;
+        if (appointmentTimeDisplay) appointmentTimeDisplay.textContent = "Selecciona hora";
+        if (selectedSummary) selectedSummary.textContent = `Estás viendo los horarios de ${selectedDateLabel}. Elige una hora disponible.`;
+        openAppointmentDetails();
+        renderAppointmentTimes();
+      });
+
+      appointmentTimes?.addEventListener("click", (event) => {
+        const button = event.target.closest(".time-slot");
+        if (!button) return;
+        appointmentTimes.querySelectorAll(".time-slot").forEach((slot) => slot.classList.remove("selected"));
+        button.classList.add("selected");
+        if (appointmentDate) appointmentDate.value = selectedDate;
+        if (appointmentTime) appointmentTime.value = button.dataset.time || "";
+        if (appointmentDateDisplay) appointmentDateDisplay.textContent = selectedDateLabel;
+        if (appointmentTimeDisplay) appointmentTimeDisplay.textContent = button.dataset.time || "Selecciona hora";
+        if (selectedSummary) selectedSummary.textContent = `Seleccionaste ${selectedDateLabel} a las ${button.dataset.time}. Completa tus datos para solicitar la cita.`;
+        if (appointmentModalSummary) appointmentModalSummary.textContent = `${selectedDateLabel} a las ${button.dataset.time}. Completa tus datos para solicitar la cita.`;
+        openAppointmentModal();
+      });
+
+      toggleTimes?.addEventListener("click", () => {
+        const isOpen = scheduleCard?.classList.toggle("show-more");
+        toggleTimes.textContent = isOpen ? "Mostrar menos horas" : "Mostrar más horas";
+      });
+
+      form?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const submitButton = form.querySelector("button[type='submit']");
+        const originalText = submitButton?.textContent || "Solicitar cita";
+        if (submitButton) {
+          submitButton.disabled = true;
+          submitButton.textContent = "Enviando...";
+        }
+
+        try {
+          const response = await fetch(APPOINTMENT_ENDPOINT, {
+            method: "POST",
+            body: new FormData(form),
+            headers: { Accept: "application/json" }
+          });
+          if (!response.ok) throw new Error("No se pudo enviar la solicitud");
+          const submittedData = Object.fromEntries(new FormData(form).entries());
+          const selectedLocation = submittedData.location || locationSelect?.value || "Prodental Coatzacoalcos";
+          const whatsappUrl = buildWhatsappUrl(submittedData);
+          form.reset();
+          closeAppointmentModal();
+          updateSelectedLocation();
+          updateSelectedService();
+          openThanksModal(selectedLocation, whatsappUrl);
+          const whatsappWindow = window.open(whatsappUrl, "_blank", "noopener");
+          showToast(whatsappWindow ? "Solicitud recibida. Te contactaremos para confirmar disponibilidad." : "Solicitud recibida. Toca Enviar por WhatsApp para compartir los datos.");
+        } catch (error) {
+          showToast("No se pudo enviar la solicitud. Intenta de nuevo o contáctanos por teléfono.");
+        } finally {
+          if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+          }
+        }
+      });
+
+      const defaultComments = [
+        { patient: "Paciente de Prodental", rating: "5 estrellas", comment: "Me explicaron todo antes de empezar y la cita fue mucho más tranquila de lo que esperaba." },
+        { patient: "Paciente de Prodental", rating: "5 estrellas", comment: "Agendé rápido, me atendieron puntual y salí con un plan claro para mi tratamiento." }
+      ];
+
+      const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[character]));
+
+      const getRatingNumber = (rating) => {
+        const number = parseInt(String(rating).match(/\d/)?.[0] || "5", 10);
+        return Math.min(Math.max(number, 1), 5);
+      };
+
+      const renderStars = (rating) => "&#9733;".repeat(getRatingNumber(rating)) + "&#9734;".repeat(5 - getRatingNumber(rating));
+
+      const loadComments = () => {
+        try {
+          return JSON.parse(localStorage.getItem("prodentalComments") || "null") || defaultComments;
+        } catch (error) {
+          return defaultComments;
+        }
+      };
+
+      const savedComments = loadComments();
+      const saveComments = () => localStorage.setItem("prodentalComments", JSON.stringify(savedComments));
+
+      const renderCommentCards = (items) => items.map((item) => `
+          <article class="comment-card">
+            <div class="comment-stars" aria-label="${getRatingNumber(item.rating)} de 5 estrellas">${renderStars(item.rating)}</div>
+            <p>${escapeHtml(item.comment)}</p>
+            <strong>${escapeHtml(item.patient)}</strong>
+            ${item.createdAt ? `<span class="comment-date">${new Date(item.createdAt).toLocaleDateString("es-MX", { day: "numeric", month: "long", year: "numeric" })}</span>` : ""}
+          </article>
+        `).join("");
+
+      const renderComments = () => {
+        if (commentsList) commentsList.innerHTML = renderCommentCards(savedComments.slice(0, 3));
+        if (allCommentsList) allCommentsList.innerHTML = renderCommentCards(savedComments);
+      };
+
+      commentForm?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const data = new FormData(commentForm);
+        const rating = data.get("rating");
+        savedComments.unshift({
+          patient: data.get("patient"),
+          rating: `${rating} ${rating === "1" ? "estrella" : "estrellas"}`,
+          comment: data.get("comment"),
+          createdAt: new Date().toISOString()
+        });
+        saveComments();
+        renderComments();
+        commentForm.reset();
+        showToast("Comentario publicado. Gracias por compartir tu experiencia.");
+      });
+
+      renderComments();
+
+      if (new URLSearchParams(window.location.search).get("comments") === "all") {
+        document.title = "Todos los comentarios | Prodental";
+        document.body.classList.remove("welcome-active");
+        welcomeScreen?.classList.add("hidden");
+        document.querySelectorAll("nav, main, footer, .floating-whatsapp").forEach((item) => {
+          item.hidden = true;
+        });
+        if (allCommentsPage) allCommentsPage.hidden = false;
+        window.scrollTo(0, 0);
+      }
+
+      const animatedItems = document.querySelectorAll(".card, .quote, .price, .fact, .comment-card");
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.animate(
+            [
+              { opacity: 0, transform: "translateY(18px)" },
+              { opacity: 1, transform: "translateY(0)" }
+            ],
+            { duration: 520, easing: "cubic-bezier(.2,.8,.2,1)", fill: "both" }
+          );
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: .14 });
+
+      animatedItems.forEach((item) => observer.observe(item));
+
+      if (new URLSearchParams(window.location.search).get("preview") === "thanks") {
+        const previewLocation = new URLSearchParams(window.location.search).get("location") === "veracruz"
+          ? "Prodental Veracruz Pto."
+          : "Prodental Coatzacoalcos";
+        welcomeScreen?.classList.add("hidden");
+        document.body.classList.remove("welcome-active");
+        openThanksModal(previewLocation);
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
