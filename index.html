@@ -79,7 +79,7 @@
     .decor-d { top: 28vh; right: 12vw; --rotate: 42deg; }
     .decor-e { bottom: 28vh; left: 12vw; --rotate: -38deg; }
 
-    main, nav, footer, .welcome-screen, .specialists-modal, .appointment-modal, .admin-modal, .access-modal, .thanks-modal, .toast {
+    main, nav, footer, .welcome-screen, .specialists-modal, .appointment-modal, .admin-modal, .access-modal, .thanks-modal, .loader-screen, .toast {
       position: relative;
       z-index: 1;
     }
@@ -356,6 +356,11 @@
       scroll-margin-top: 88px;
     }
 
+    #precios {
+      background:
+        linear-gradient(180deg, rgba(2, 16, 42, .08), rgba(191, 239, 255, .045), rgba(2, 16, 42, .04));
+    }
+
     .section-head {
       display: flex;
       align-items: end;
@@ -416,38 +421,91 @@
     .price-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
+      gap: 16px;
     }
 
     .price {
-      min-height: 155px;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
+      position: relative;
+      min-height: 178px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px;
+      border-radius: 10px;
       background:
-        linear-gradient(rgba(255,255,255,.07), rgba(255,255,255,.04)) padding-box,
-        var(--metal-line) border-box;
+        radial-gradient(circle at 92% 0%, rgba(216, 225, 235, .11), transparent 7rem) padding-box,
+        linear-gradient(145deg, rgba(3, 19, 48, .97), rgba(7, 43, 91, .92) 54%, rgba(2, 14, 36, .98)) padding-box,
+        linear-gradient(135deg, rgba(244,247,251,.58), rgba(83, 98, 116, .5) 34%, rgba(218, 225, 233, .24) 58%, rgba(37, 45, 56, .56)) border-box;
       border: 1px solid transparent;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      box-shadow:
+        0 18px 42px rgba(0, 0, 0, .24),
+        inset 0 1px 0 rgba(255,255,255,.07),
+        inset 0 -1px 0 rgba(0,0,0,.22);
+      overflow: hidden;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .price::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: linear-gradient(180deg, #f4f7fb 0%, #7f8b99 28%, #d7dee6 48%, #465260 72%, #b8c2cc 100%);
+      opacity: .78;
+    }
+
+    .price:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 24px 54px rgba(0, 0, 0, .28),
+        0 0 0 1px rgba(191, 239, 255, .08),
+        inset 0 1px 0 rgba(255,255,255,.12);
     }
 
     .price h3 {
-      min-height: 58px;
-      margin: 0 0 12px;
+      min-height: auto;
+      margin: 0;
+      color: #f7fbff;
       font-size: 18px;
-      line-height: 1.2;
+      line-height: 1.25;
+      letter-spacing: 0;
     }
 
     .price strong {
       display: block;
-      color: var(--sky-bright);
-      font-size: 24px;
-      margin-bottom: 12px;
+      width: fit-content;
+      color: #c6d0da;
+      background: none;
+      font-size: clamp(25px, 2.5vw, 32px);
+      line-height: 1.05;
+      text-shadow:
+        0 1px 0 rgba(255, 255, 255, .12),
+        0 2px 6px rgba(0, 0, 0, .22);
     }
 
     .price a {
-      color: var(--sky);
-      font-weight: 850;
+      width: fit-content;
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(191, 239, 255, .42);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--royal-deep);
+      background: linear-gradient(145deg, var(--sky-bright), var(--sky) 58%, var(--steel));
+      font-size: 14px;
+      font-weight: 950;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+
+    .price a:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 12px 28px rgba(105, 242, 255, .16),
+        inset 0 1px 0 rgba(255,255,255,.85);
     }
 
     .locations {
@@ -714,28 +772,32 @@
     }
 
     .schedule-card {
-      padding: clamp(18px, 3vw, 28px);
+      padding: clamp(22px, 3.2vw, 34px);
       border: 1px solid transparent;
-      border-radius: 8px;
+      border-radius: 10px;
       background:
-        linear-gradient(145deg, rgba(6, 42, 96, .96), rgba(12, 83, 153, .9) 54%, rgba(143, 177, 216, .78)) padding-box,
-        var(--metal-line) border-box;
+        radial-gradient(circle at 100% 0%, rgba(191, 239, 255, .12), transparent 18rem) padding-box,
+        linear-gradient(145deg, rgba(3, 20, 51, .98), rgba(6, 39, 88, .94) 52%, rgba(13, 74, 137, .88)) padding-box,
+        linear-gradient(135deg, rgba(244,247,251,.62), rgba(83, 98, 116, .45), rgba(191,239,255,.22)) border-box;
       color: var(--white);
-      box-shadow: 0 24px 70px rgba(0, 0, 0, .35);
+      box-shadow:
+        0 26px 72px rgba(0, 0, 0, .34),
+        inset 0 1px 0 rgba(255,255,255,.08);
     }
 
     .schedule-head {
       display: flex;
       justify-content: space-between;
       align-items: start;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 18px;
+      margin-bottom: 22px;
     }
 
     .schedule-head h3 {
       margin: 4px 0 0;
-      font-size: clamp(24px, 2.8vw, 34px);
-      line-height: 1.08;
+      max-width: 680px;
+      font-size: clamp(30px, 3.8vw, 48px);
+      line-height: 1.02;
       color: var(--white);
     }
 
@@ -749,36 +811,44 @@
 
     .schedule-badge {
       flex: 0 0 auto;
-      padding: 9px 12px;
-      border: 1px solid rgba(191, 239, 255, .42);
+      padding: 12px 15px;
+      border: 1px solid rgba(198, 208, 218, .58);
       border-radius: 8px;
-      color: var(--royal-deep);
-      background: linear-gradient(145deg, var(--sky-bright), var(--steel));
+      color: #071f52;
+      background: linear-gradient(145deg, #edf4fa, #c6d0da 58%, #8fa0b0);
       font-size: 13px;
       font-weight: 900;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.72),
+        0 12px 28px rgba(0,0,0,.16);
     }
 
     .appointment-details {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
     .detail-pill {
-      min-height: 74px;
-      padding: 12px;
-      border: 1px solid rgba(191, 239, 255, .24);
+      min-height: 68px;
+      padding: 13px 14px;
+      border: 1px solid rgba(198, 208, 218, .24);
       border-radius: 8px;
-      background: rgba(3, 20, 51, .42);
+      background: rgba(2, 16, 42, .42);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .detail-pill:nth-child(3),
+    .detail-pill:nth-child(4) {
+      min-height: auto;
+      background: rgba(255,255,255,.045);
     }
 
     .detail-pill span {
       display: block;
       margin-bottom: 5px;
-      color: var(--sky);
+      color: #bfefff;
       font-size: 12px;
       font-weight: 900;
       text-transform: uppercase;
@@ -794,15 +864,15 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
-      margin: 0 0 14px;
+      margin: 4px 0 16px;
     }
 
     .schedule-contact span {
-      min-height: 58px;
-      padding: 10px 12px;
-      border: 1px solid rgba(191, 239, 255, .22);
+      min-height: 54px;
+      padding: 9px 11px;
+      border: 1px solid rgba(198, 208, 218, .18);
       border-radius: 8px;
-      background: rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .045);
     }
 
     .schedule-contact strong,
@@ -811,7 +881,7 @@
     }
 
     .schedule-contact strong {
-      color: var(--sky);
+      color: #aebdcb;
       font-size: 12px;
       text-transform: uppercase;
     }
@@ -825,19 +895,20 @@
 
     .schedule-notes {
       display: grid;
-      gap: 8px;
-      margin: 0 0 14px;
-      color: var(--muted);
+      gap: 6px;
+      margin: 0 0 20px;
+      color: #dbe8f6;
       font-weight: 750;
       line-height: 1.45;
     }
 
     .schedule-notes span {
       display: block;
-      padding: 10px 12px;
-      border: 1px solid rgba(191, 239, 255, .18);
+      padding: 9px 0;
+      border: 0;
+      border-top: 1px solid rgba(198, 208, 218, .16);
       border-radius: 8px;
-      background: rgba(255, 255, 255, .05);
+      background: transparent;
     }
 
     .date-carousel {
@@ -845,16 +916,16 @@
       grid-template-columns: 44px minmax(0, 1fr) 44px;
       align-items: stretch;
       gap: 8px;
-      margin: 12px 0;
+      margin: 4px 0 14px;
     }
 
     .date-arrow {
       min-height: 66px;
       cursor: pointer;
-      border: 1px solid rgba(191, 239, 255, .26);
+      border: 1px solid rgba(198, 208, 218, .22);
       border-radius: 8px;
-      color: var(--sky-bright);
-      background: rgba(3, 20, 51, .48);
+      color: #dbe8f6;
+      background: rgba(2, 16, 42, .52);
       font-size: 34px;
       font-weight: 900;
       line-height: 1;
@@ -877,14 +948,16 @@
     }
     .date-tabs {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       margin: 0;
       overflow-x: auto;
       overscroll-behavior-x: contain;
       scroll-snap-type: x proximity;
-      scrollbar-width: thin;
-      padding-bottom: 6px;
+      scrollbar-width: none;
+      padding-bottom: 0;
     }
+
+    .date-tabs::-webkit-scrollbar { display: none; }
 
     .date-tab,
     .time-slot,
@@ -898,11 +971,11 @@
     .date-tab {
       flex: 0 0 clamp(142px, 24vw, 190px);
       min-height: 66px;
-      padding: 10px 8px;
+      padding: 12px 10px;
       scroll-snap-align: start;
       color: var(--white);
-      background: rgba(3, 20, 51, .44);
-      border: 1px solid rgba(191, 239, 255, .18);
+      background: rgba(2, 16, 42, .52);
+      border: 1px solid rgba(198, 208, 218, .18);
       font-weight: 900;
     }
 
@@ -918,9 +991,9 @@
     .date-tab:hover,
     .time-slot:hover,
     .time-slot.selected {
-      color: var(--royal-deep);
-      background: linear-gradient(145deg, var(--sky-bright), var(--steel));
-      box-shadow: 0 12px 28px rgba(191, 239, 255, .18);
+      color: #071f52;
+      background: linear-gradient(145deg, #eef5fb, #c6d0da 60%, #96a7b8);
+      box-shadow: 0 12px 28px rgba(198, 208, 218, .16);
       transform: translateY(-1px);
     }
 
@@ -932,15 +1005,15 @@
     .time-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
-      padding-top: 6px;
+      gap: 10px;
+      padding-top: 4px;
     }
 
     .time-slot {
-      min-height: 46px;
-      padding: 10px;
-      color: var(--royal-deep);
-      background: rgba(233, 244, 255, .9);
+      min-height: 50px;
+      padding: 12px;
+      color: #071f52;
+      background: #d9e6f2;
       font-weight: 900;
     }
 
@@ -987,10 +1060,10 @@
     .time-toggle {
       width: 100%;
       min-height: 44px;
-      margin-top: 12px;
-      border: 1px solid rgba(191, 239, 255, .34);
-      background: rgba(3, 20, 51, .36);
-      color: var(--sky-bright);
+      margin-top: 14px;
+      border: 1px solid rgba(198, 208, 218, .28);
+      background: rgba(2, 16, 42, .44);
+      color: #eef5fb;
       font-weight: 900;
     }
 
@@ -1009,10 +1082,10 @@
     .selected-summary {
       margin: 14px 0 0;
       padding: 12px;
-      border: 1px solid rgba(191, 239, 255, .24);
+      border: 1px solid rgba(198, 208, 218, .2);
       border-radius: 8px;
-      color: var(--sky-bright);
-      background: rgba(3, 20, 51, .38);
+      color: #eef5fb;
+      background: rgba(2, 16, 42, .5);
       font-weight: 850;
     }
 
@@ -1172,6 +1245,100 @@
     }
 
     .toast.show { transform: translateY(0); }
+
+    .loader-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(2, 12, 34, .76);
+      backdrop-filter: blur(14px);
+    }
+
+    .loader-screen[hidden] {
+      display: none !important;
+    }
+
+    .loader-panel {
+      width: min(100%, 360px);
+      display: grid;
+      justify-items: center;
+      gap: 16px;
+      padding: 28px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(191, 239, 255, .14), transparent 14rem) padding-box,
+        linear-gradient(145deg, rgba(3, 20, 51, .98), rgba(7, 43, 91, .94)) padding-box,
+        linear-gradient(135deg, rgba(244,247,251,.64), rgba(83, 98, 116, .46), rgba(191,239,255,.2)) border-box;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, .38);
+      text-align: center;
+    }
+
+    .loader-tooth {
+      width: 132px;
+      height: 132px;
+      filter: drop-shadow(0 18px 30px rgba(0,0,0,.26));
+    }
+
+    .loader-tooth-fill {
+      transform-box: fill-box;
+      transform-origin: 50% 100%;
+      transform: scaleY(var(--loader-progress, .08));
+      transition: transform .28s ease;
+    }
+
+    .loader-screen.loading .loader-tooth {
+      animation: toothPulse 1.25s ease-in-out infinite;
+    }
+
+    .loader-screen.loading .loader-tooth-shine {
+      animation: toothShine 1.45s ease-in-out infinite;
+    }
+
+    .loader-panel h2 {
+      margin: 0;
+      color: var(--white);
+      font-size: 24px;
+      line-height: 1.15;
+    }
+
+    .loader-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .loader-bar {
+      width: 100%;
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.1);
+    }
+
+    .loader-bar span {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #8fa0b0, #d9e6f2, #69f2ff);
+      transform: scaleX(var(--loader-progress, .08));
+      transform-origin: left center;
+      transition: transform .28s ease;
+    }
+
+    @keyframes toothPulse {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-4px) scale(1.025); }
+    }
+
+    @keyframes toothShine {
+      0%, 100% { opacity: .18; }
+      50% { opacity: .48; }
+    }
 
     .floating-whatsapp {
       position: fixed;
@@ -1461,7 +1628,7 @@
 
     .specialist-person {
       display: grid;
-      grid-template-columns: 112px minmax(0, 1fr);
+      grid-template-columns: 180px minmax(0, 1fr);
       gap: 14px;
       align-items: start;
       padding: 14px;
@@ -1471,7 +1638,8 @@
     }
 
     .specialist-photo {
-      min-height: 112px;
+      min-height: 180px;
+      aspect-ratio: 4 / 5;
       display: grid;
       place-items: center;
       border: 1px solid rgba(191, 239, 255, .32);
@@ -1483,8 +1651,37 @@
       text-align: center;
       font-weight: 950;
       line-height: 1.25;
-      padding: 10px;
+      padding: 0;
+      overflow: hidden;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+    }
+
+    .specialist-photo img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .specialist-photo img.photo-dra {
+      object-position: 58% 64%;
+    }
+
+    .specialist-photo img.photo-dr {
+      object-position: 67% 42%;
+    }
+
+    .specialist-photo img + span {
+      display: none;
+    }
+
+    .specialist-photo img[src=""] {
+      display: none;
+    }
+
+    .specialist-photo img[src=""] + span {
+      display: grid;
     }
 
     .specialist-photo span {
@@ -1520,6 +1717,98 @@
     .specialist-bio {
       margin-top: 8px;
       color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .experience-details {
+      margin-top: 10px;
+    }
+
+    .experience-details summary {
+      width: fit-content;
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--royal-deep);
+      background: linear-gradient(145deg, var(--sky-bright), var(--sky) 52%, var(--steel));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.85),
+        0 12px 28px rgba(185, 228, 236, .16);
+      cursor: pointer;
+      font-weight: 950;
+      list-style: none;
+    }
+
+    .experience-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .experience-details[open] summary {
+      margin-bottom: 12px;
+    }
+
+    .experience-content {
+      display: grid;
+      gap: 14px;
+      padding: 14px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(255, 218, 118, .16), transparent 18rem) padding-box,
+        radial-gradient(circle at 100% 14%, rgba(35, 226, 255, .18), transparent 17rem) padding-box,
+        linear-gradient(145deg, rgba(2, 22, 58, .96), rgba(18, 72, 132, .9) 58%, rgba(4, 33, 82, .96)) padding-box,
+        linear-gradient(135deg, rgba(255, 229, 140, .88), rgba(191, 239, 255, .54), rgba(72, 125, 196, .64)) border-box;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.12),
+        0 18px 42px rgba(0, 0, 0, .22);
+    }
+
+    .experience-block {
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .045);
+    }
+
+    .experience-block h4 {
+      margin: 0 0 10px;
+      color: #ffe58c;
+      font-size: 16px;
+      text-shadow: 0 0 14px rgba(255, 229, 140, .24);
+    }
+
+    .experience-block ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #eef7ff;
+      line-height: 1.55;
+    }
+
+    .experience-block li {
+      padding-left: 3px;
+      margin-bottom: 5px;
+    }
+
+    .experience-block li::marker {
+      color: #69f2ff;
+      font-size: 1.05em;
+    }
+
+    .conditions-list {
+      columns: 2;
+      column-gap: 28px;
+    }
+
+    .conditions-list li {
+      break-inside: avoid;
+      margin-bottom: 3px;
+    }
+
+    .experience-placeholder {
+      margin: 0;
+      color: #eef7ff;
       line-height: 1.55;
     }
 
@@ -1820,16 +2109,18 @@
       .card h3 { font-size: 22px; }
       .price {
         min-height: auto;
-        padding: 14px;
+        padding: 18px 18px 18px 20px;
+        gap: 14px;
       }
       .price h3 {
         min-height: auto;
-        margin-bottom: 8px;
-        font-size: 17px;
+        font-size: 18px;
       }
       .price strong {
-        margin-bottom: 8px;
-        font-size: 22px;
+        font-size: 30px;
+      }
+      .price a {
+        width: 100%;
       }
       .quote {
         min-height: auto;
@@ -1856,7 +2147,7 @@
         min-height: 56px;
       }
       .schedule-card {
-        padding: 14px;
+        padding: 16px;
         border-radius: 8px;
       }
       .schedule-head {
@@ -1864,11 +2155,19 @@
         gap: 10px;
       }
       .schedule-head h3 {
-        font-size: 25px;
+        font-size: 32px;
         line-height: 1.12;
       }
       .schedule-badge { align-self: flex-start; }
       .detail-pill, .schedule-contact span { min-height: auto; }
+      .appointment-details { gap: 8px; }
+      .schedule-contact {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .schedule-contact span {
+        flex: 1 1 160px;
+      }
       .date-tab, .time-slot {
         min-height: 58px;
         padding: 10px 6px;
@@ -1925,7 +2224,11 @@
       .admin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .specialist-tabs { grid-template-columns: 1fr; }
       .specialist-person { grid-template-columns: 1fr; }
-      .specialist-photo { min-height: 150px; }
+      .specialist-photo {
+        min-height: 360px;
+        aspect-ratio: 3 / 4;
+      }
+      .conditions-list { columns: 1; }
       .welcome-screen {
         align-items: start;
         padding:
@@ -1974,7 +2277,7 @@
       .date-carousel { grid-template-columns: 32px minmax(0, 1fr) 32px; }
       .date-arrow { min-height: 52px; font-size: 26px; }
       .date-tab { flex-basis: 116px; }
-      .schedule-head h3 { font-size: 23px; }
+      .schedule-head h3 { font-size: 30px; }
       .links .btn { padding-inline: 10px; font-size: 14px; }
       .welcome-panel { padding: 16px; }
       .welcome-copy h2 { font-size: clamp(36px, 13vw, 50px); }
@@ -2373,7 +2676,7 @@
         <button class="btn" type="submit">Publicar comentario</button>
       </form>
       <div class="comments-actions">
-        <a class="btn secondary" id="viewAllComments" href="?comments=all" target="_blank" rel="noopener">Ver todos los comentarios</a>
+        <a class="btn secondary" id="viewAllComments" href="./index.html?comments=all" target="_blank" rel="noopener">Ver todos los comentarios</a>
       </div>
       <div class="comments-list" id="commentsList" aria-live="polite"></div>
     </section>
@@ -2428,7 +2731,7 @@
             <div class="schedule-head">
               <div>
                 <span class="schedule-kicker">Agenda abierta</span>
-                <h3>Selecciona una fecha y horario exacto</h3>
+                <h3>Agenda tu cita</h3>
               </div>
               <span class="schedule-badge">Primera visita $600</span>
             </div>
@@ -2470,7 +2773,7 @@
             </div>
             <div class="time-grid" id="appointmentTimes" aria-label="Horarios disponibles" hidden></div>
             <button class="time-toggle" id="toggleTimes" type="button" hidden>Mostrar más horas</button>
-            <div class="selected-summary" id="selectedSummary">Toca una fecha para desplegar tus datos de cita.</div>
+            <div class="selected-summary" id="selectedSummary">Selecciona una fecha para ver horarios disponibles.</div>
 
             
           </div>
@@ -2491,7 +2794,7 @@
         <h1>Todos los comentarios</h1>
         <p>Opiniones acumuladas en este navegador sobre la atención recibida.</p>
       </div>
-      <a class="btn secondary" href="./prodental-index.html#comentarios">Volver a la página</a>
+      <a class="btn secondary" href="./index.html#comentarios">Volver a comentarios</a>
     </div>
     <div class="comments-page-list" id="allCommentsList" aria-live="polite"></div>
   </section>
@@ -2521,19 +2824,103 @@
         <h3>Especialistas en Coatzacoalcos</h3>
         <div class="specialist-list">
           <div class="specialist-person">
-            <div class="specialist-photo"><span>MC</span></div>
+            <div class="specialist-photo">
+              <img class="photo-dra" src="WhatsApp Image 2026-05-27 at 5.17.42 PM.jpeg" alt="Dra. María del Carmen Canul Guzmán atendiendo a un paciente" onerror="this.remove()" />
+              <span>MC</span>
+            </div>
             <div class="specialist-info">
               <strong>Dra. María del Carmen Canul Guzmán</strong>
-              <span>Odontóloga</span>
-              <p class="specialist-bio">Espacio para agregar su trayectoria, experiencia profesional, formación y una presentación más completa.</p>
+              <span>Ortodoncista</span>
+              <details class="experience-details">
+                <summary>Experiencia</summary>
+                <div class="experience-content">
+                  <div class="experience-block">
+                    <h4>Experiencia</h4>
+                    <ul>
+                      <li>28 años en consulta privada</li>
+                    </ul>
+                  </div>
+                  <div class="experience-block">
+                    <h4>Formación</h4>
+                    <ul>
+                      <li>Universidad Veracruzana</li>
+                      <li>Instituto de Especialidades Odontológicas</li>
+                    </ul>
+                  </div>
+                  <div class="experience-block">
+                    <h4>Enfermedades tratadas</h4>
+                    <ul class="conditions-list">
+                      <li>Dolor de muelas</li>
+                      <li>Caries</li>
+                      <li>Alveolitis</li>
+                      <li>Atrición dental</li>
+                      <li>Ausencia dentaria</li>
+                      <li>Avulsión dental</li>
+                      <li>Bruxismo</li>
+                      <li>Desgaste dental</li>
+                      <li>Diente impactado</li>
+                      <li>Diente retenido</li>
+                      <li>Dientes apiñados</li>
+                      <li>Dientes desalineados</li>
+                      <li>Enfermedad periodontal - piorrea</li>
+                      <li>Erosión dental</li>
+                      <li>Dolor post endodoncia</li>
+                      <li>Fístula dental o en encía</li>
+                      <li>Fractura coronal</li>
+                      <li>Fracturas de dientes</li>
+                      <li>Fluorosis</li>
+                      <li>Halitosis</li>
+                      <li>Impactación dental</li>
+                      <li>Infección dental</li>
+                      <li>Manchas en dientes</li>
+                      <li>Mordida abierta</li>
+                      <li>Movilidad dentaria</li>
+                      <li>Muelas del juicio</li>
+                      <li>Pérdida de dientes</li>
+                      <li>Periodontitis</li>
+                      <li>Pigmentación severa dental</li>
+                      <li>Prognatismo</li>
+                      <li>Sensibilidad dentaria</li>
+                      <li>Sobremordida</li>
+                      <li>Trastornos de la articulación temporomandibular</li>
+                      <li>Trastornos de la ATM</li>
+                      <li>Traumatismo dental</li>
+                      <li>Úlceras bucales</li>
+                      <li>Absceso dental</li>
+                      <li>Gingivitis</li>
+                      <li>Encías expuestas</li>
+                      <li>Raíces expuestas</li>
+                      <li>Eliminación de amalgamas</li>
+                      <li>Pulpitis</li>
+                      <li>Trauma dental</li>
+                      <li>Maloclusiones dentales</li>
+                      <li>Caninos retenidos</li>
+                      <li>Diastemas</li>
+                      <li>Prognatismo mandibular</li>
+                      <li>Maxilar protrusivo</li>
+                    </ul>
+                  </div>
+                </div>
+              </details>
             </div>
           </div>
           <div class="specialist-person">
-            <div class="specialist-photo"><span>CG</span></div>
+            <div class="specialist-photo">
+              <img class="photo-dr" src="WhatsApp Image 2026-05-27 at 5.14.58 PM.jpeg" alt="Dr. Christopher García Cruz atendiendo a un paciente" onerror="this.remove()" />
+              <span>CG</span>
+            </div>
             <div class="specialist-info">
               <strong>Dr. Christopher García Cruz</strong>
               <span>Endodoncista</span>
-              <p class="specialist-bio">Espacio para agregar su trayectoria, experiencia profesional, formación y una presentación más completa.</p>
+              <details class="experience-details">
+                <summary>Experiencia</summary>
+                <div class="experience-content">
+                  <div class="experience-block">
+                    <h4>Información pendiente</h4>
+                    <p class="experience-placeholder">Próximamente se agregará su experiencia, formación y enfermedades tratadas.</p>
+                  </div>
+                </div>
+              </details>
             </div>
           </div>
         </div>
@@ -2548,7 +2935,15 @@
             <div class="specialist-info">
               <strong>Dra. Carolina Reyes Lagunes</strong>
               <span>Endodoncista</span>
-              <p class="specialist-bio">Espacio para agregar su trayectoria, experiencia profesional, formación y una presentación más completa.</p>
+              <details class="experience-details">
+                <summary>Experiencia</summary>
+                <div class="experience-content">
+                  <div class="experience-block">
+                    <h4>Información pendiente</h4>
+                    <p class="experience-placeholder">Próximamente se agregará su experiencia, formación y enfermedades tratadas.</p>
+                  </div>
+                </div>
+              </details>
             </div>
           </div>
           <div class="specialist-person">
@@ -2556,7 +2951,15 @@
             <div class="specialist-info">
               <strong>Dra. Vanesa Cabrera Canul</strong>
               <span>Endodoncista</span>
-              <p class="specialist-bio">Espacio para agregar su trayectoria, experiencia profesional, formación y una presentación más completa.</p>
+              <details class="experience-details">
+                <summary>Experiencia</summary>
+                <div class="experience-content">
+                  <div class="experience-block">
+                    <h4>Información pendiente</h4>
+                    <p class="experience-placeholder">Próximamente se agregará su experiencia, formación y enfermedades tratadas.</p>
+                  </div>
+                </div>
+              </details>
             </div>
           </div>
         </div>
@@ -2712,7 +3115,7 @@
       </article>
 
       <div class="thanks-actions">
-        <a class="btn" id="thanksWhatsappLink" href="https://wa.me/529211181380" target="_blank" rel="noreferrer">Enviar por WhatsApp</a>
+        <a class="btn" id="thanksWhatsappLink" href="https://wa.me/529211181380" target="_blank" rel="noreferrer">Enviar datos por WhatsApp</a>
         <button class="btn secondary" id="finishThanks" type="button">Volver al inicio</button>
       </div>
     </div>
@@ -2720,13 +3123,42 @@
 
   <div class="toast" id="toast">Solicitud recibida. Te contactaremos para confirmar disponibilidad.</div>
 
+  <div class="loader-screen" id="appointmentLoader" aria-live="polite" aria-label="Enviando solicitud de cita" hidden>
+    <div class="loader-panel">
+      <svg class="loader-tooth" viewBox="0 0 220 210" aria-hidden="true">
+        <defs>
+          <clipPath id="loaderToothClip">
+            <path d="M82 20c22-9 35 3 49 19 15 17 37 16 49 0 13-16 34-1 31 26-5 43-36 96-75 142-8 10-19 5-16-8l18-78c5-23-7-45-24-45-21 0-29 20-31 60-2 27-7 50-18 51-11 1-18-23-21-60-5-53 2-95 38-107Z"/>
+          </clipPath>
+        </defs>
+        <path fill="rgba(255,255,255,.11)" stroke="rgba(217,230,242,.72)" stroke-width="5" d="M82 20c22-9 35 3 49 19 15 17 37 16 49 0 13-16 34-1 31 26-5 43-36 96-75 142-8 10-19 5-16-8l18-78c5-23-7-45-24-45-21 0-29 20-31 60-2 27-7 50-18 51-11 1-18-23-21-60-5-53 2-95 38-107Z"/>
+        <g clip-path="url(#loaderToothClip)">
+          <rect class="loader-tooth-fill" x="28" y="16" width="190" height="196" fill="url(#loaderFillGradient)"/>
+          <path class="loader-tooth-shine" fill="rgba(255,255,255,.42)" d="M42 44c45-34 116-26 154 22 23 29 16 71-16 93-39 27-94 9-128-34C19 84 7 69 42 44Z"/>
+        </g>
+        <defs>
+          <linearGradient id="loaderFillGradient" x1="0" x2="1" y1="1" y2="0">
+            <stop offset="0%" stop-color="#6f8293"/>
+            <stop offset="48%" stop-color="#c6d0da"/>
+            <stop offset="100%" stop-color="#69f2ff"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <h2>Enviando solicitud</h2>
+      <p>Estamos preparando los datos de tu cita.</p>
+      <div class="loader-bar" aria-hidden="true"><span></span></div>
+    </div>
+  </div>
+
     <script>
     document.addEventListener("DOMContentLoaded", () => {
       const APPOINTMENT_ENDPOINT = "https://formspree.io/f/xojbpedo";
       const ADMIN_PASSCODE = "Prodental2026";
+      const initialHash = window.location.hash;
       if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-      window.scrollTo(0, 0);
+      if (!initialHash) window.scrollTo(0, 0);
       const toast = document.querySelector("#toast");
+      const appointmentLoader = document.querySelector("#appointmentLoader");
       const openSpecialists = document.querySelector("#openSpecialists");
       const specialistsModal = document.querySelector("#specialistsModal");
       const closeSpecialists = document.querySelector("#closeSpecialists");
@@ -2902,6 +3334,9 @@
         closeThanksModal();
         document.querySelector("#inicio")?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
+      thanksWhatsappLink?.addEventListener("click", () => {
+        showToast("Se abrirá WhatsApp con los datos de tu cita listos para enviar.");
+      });
       openScheduleAdmin?.addEventListener("click", openDoctorAccessModal);
       toggleDoctorPasscode?.addEventListener("click", () => {
         if (!doctorPasscode) return;
@@ -2958,6 +3393,14 @@
         }, 160);
       };
 
+      if (initialHash && initialHash !== "#inicio") {
+        welcomeScreen?.classList.add("hidden");
+        document.body.classList.remove("welcome-active");
+        window.setTimeout(() => {
+          document.querySelector(initialHash)?.scrollIntoView({ behavior: "auto", block: "start" });
+        }, 40);
+      }
+
       startQuestions?.addEventListener("click", () => {
         welcomeScreen?.classList.add("questions-open");
         updateQuestionStep(0);
@@ -2988,6 +3431,39 @@
         toast.textContent = message;
         toast.classList.add("show");
         window.setTimeout(() => toast.classList.remove("show"), 3600);
+      };
+
+      let loaderTimer;
+
+      const setLoaderProgress = (value) => {
+        appointmentLoader?.style.setProperty("--loader-progress", String(value));
+      };
+
+      const showAppointmentLoader = () => {
+        if (!appointmentLoader) return;
+        window.clearInterval(loaderTimer);
+        setLoaderProgress(.08);
+        appointmentLoader.hidden = false;
+        appointmentLoader.classList.add("loading");
+        document.body.classList.add("modal-open");
+        let progress = .08;
+        loaderTimer = window.setInterval(() => {
+          progress = Math.min(progress + .08, .88);
+          setLoaderProgress(progress);
+        }, 240);
+      };
+
+      const hideAppointmentLoader = (complete = false) => {
+        if (!appointmentLoader) return;
+        window.clearInterval(loaderTimer);
+        if (complete) setLoaderProgress(1);
+        window.setTimeout(() => {
+          appointmentLoader.classList.remove("loading");
+          appointmentLoader.hidden = true;
+          const hasOpenModal = [appointmentModal, thanksModal, specialistsModal, scheduleAdminModal, doctorAccessModal].some((modal) => modal && !modal.hidden);
+          if (!hasOpenModal) document.body.classList.remove("modal-open");
+          setLoaderProgress(.08);
+        }, complete ? 360 : 120);
       };
 
       const locationAddresses = {
@@ -3082,6 +3558,16 @@
       let appointmentSlots = {};
 
       const getIsoDate = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+      const getMinutesFromTime = (time) => {
+        const [hours, minutes] = String(time).split(":").map(Number);
+        return (hours * 60) + minutes;
+      };
+
+      const isPastSlot = (date, time) => {
+        const now = new Date();
+        if (date !== getIsoDate(now)) return false;
+        return getMinutesFromTime(time) <= (now.getHours() * 60) + now.getMinutes();
+      };
 
       const buildScheduleDays = () => {
         const scheduleStartDate = new Date();
@@ -3192,10 +3678,10 @@
       const renderAppointmentTimes = () => {
         if (!appointmentTimes || !toggleTimes || !scheduleCard) return;
         const block = getDayBlock(selectedDate);
-        const slots = block.closed ? [] : (appointmentSlots[selectedDate] || []).filter((slot) => !block.times?.includes(slot));
+        const slots = block.closed ? [] : (appointmentSlots[selectedDate] || []).filter((slot) => !block.times?.includes(slot) && !isPastSlot(selectedDate, slot));
         appointmentTimes.innerHTML = slots.length ? slots.map((slot, index) => `
           <button class="time-slot${index > 3 ? " extra" : ""}" type="button" data-time="${slot}">${slot}</button>
-        `).join("") : `<div class="empty-slots">No hay horarios disponibles para esta fecha.</div>`;
+        `).join("") : `<div class="empty-slots">${selectedDate === getIsoDate(new Date()) ? "Ya no hay horarios disponibles para hoy." : "No hay horarios disponibles para esta fecha."}</div>`;
         scheduleCard.classList.remove("show-more");
         toggleTimes.textContent = "Mostrar más horas";
         toggleTimes.hidden = slots.length <= 4;
@@ -3208,7 +3694,12 @@
       const refreshScheduleForCurrentDay = () => {
         const now = new Date();
         const currentDayKey = getIsoDate(now);
-        if (currentDayKey === scheduleTodayKey) return;
+        if (currentDayKey === scheduleTodayKey) {
+          if (selectedDate === currentDayKey && appointmentTimes && !appointmentTimes.hidden) {
+            renderAppointmentTimes();
+          }
+          return;
+        }
         buildScheduleDays();
         selectedDate = "";
         selectedDateLabel = "";
@@ -3222,7 +3713,7 @@
         }
         if (toggleTimes) toggleTimes.hidden = true;
         scheduleCard?.classList.remove("form-open", "show-more");
-        if (selectedSummary) selectedSummary.textContent = "Toca una fecha para desplegar tus datos de cita.";
+        if (selectedSummary) selectedSummary.textContent = "Selecciona una fecha para ver horarios disponibles.";
         renderDateTabs();
         renderAdminDates();
         renderAdminTimes();
@@ -3318,13 +3809,18 @@
           submitButton.disabled = true;
           submitButton.textContent = "Enviando...";
         }
+        showAppointmentLoader();
+        const minimumLoaderTime = new Promise((resolve) => window.setTimeout(resolve, 1500));
 
         try {
-          const response = await fetch(APPOINTMENT_ENDPOINT, {
+          const [response] = await Promise.all([
+            fetch(APPOINTMENT_ENDPOINT, {
             method: "POST",
             body: new FormData(form),
             headers: { Accept: "application/json" }
-          });
+            }),
+            minimumLoaderTime
+          ]);
           if (!response.ok) throw new Error("No se pudo enviar la solicitud");
           const submittedData = Object.fromEntries(new FormData(form).entries());
           const selectedLocation = submittedData.location || locationSelect?.value || "Prodental Coatzacoalcos";
@@ -3334,9 +3830,11 @@
           updateSelectedLocation();
           updateSelectedService();
           openThanksModal(selectedLocation, whatsappUrl);
-          const whatsappWindow = window.open(whatsappUrl, "_blank", "noopener");
-          showToast(whatsappWindow ? "Solicitud recibida. Te contactaremos para confirmar disponibilidad." : "Solicitud recibida. Toca Enviar por WhatsApp para compartir los datos.");
+          hideAppointmentLoader(true);
+          showToast("Solicitud recibida. Te contactaremos para confirmar disponibilidad.");
         } catch (error) {
+          await minimumLoaderTime;
+          hideAppointmentLoader(false);
           showToast("No se pudo enviar la solicitud. Intenta de nuevo o contáctanos por teléfono.");
         } finally {
           if (submitButton) {
