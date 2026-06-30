@@ -4151,8 +4151,8 @@
           openThanksModal(selectedLocation, whatsappUrl);
           hideAppointmentLoader(true);
           showToast(emailSent
-            ? "Cita agendada correctamente. También se envió el aviso por correo."
-            : "Cita agendada correctamente. Revisa Calendar; el aviso por correo no pudo enviarse.");
+            ? `Cita agendada en Google Calendar. Evento: ${result.eventId || result.appointmentId || "creado"}. También se envió el aviso por correo.`
+            : `Cita agendada en Google Calendar. Evento: ${result.eventId || result.appointmentId || "creado"}. El aviso por correo no pudo enviarse.`);
           if (scheduleAdminModal && !scheduleAdminModal.hidden) loadAppointmentComments();
         } catch (error) {
           await minimumLoaderTime;
