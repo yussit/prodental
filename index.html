@@ -1567,6 +1567,88 @@
       background: linear-gradient(145deg, var(--sky-bright), var(--sky));
     }
 
+    .appointment-admin {
+      display: grid;
+      gap: 12px;
+      margin-top: 6px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .appointment-admin-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .appointment-admin-head h3 {
+      margin: 0;
+      color: var(--sky-bright);
+      font-size: 20px;
+    }
+
+    .appointment-admin-status {
+      min-height: 22px;
+      margin: 0;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .appointment-admin-list {
+      display: grid;
+      gap: 10px;
+      max-height: min(52vh, 560px);
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .appointment-record {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .appointment-record-meta {
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .appointment-record-meta strong {
+      color: var(--sky-bright);
+      font-size: 16px;
+    }
+
+    .comment-original {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .comment-original span {
+      display: block;
+      color: var(--sky-bright);
+      font-weight: 900;
+    }
+
+    .appointment-comment-edit {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .appointment-record-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
     .icon-button {
       flex: 0 0 auto;
       width: 44px;
@@ -2982,7 +3064,7 @@
         <span id="appointmentModalSummary">Elige una fecha y hora disponible para continuar.</span>
       </div>
 
-      <form class="appointment-form" id="form" action="https://formspree.io/f/xojbpedo" method="POST">
+      <form class="appointment-form" id="form" action="" method="POST">
         <input type="hidden" name="_subject" value="Nueva solicitud de cita - Prodental" />
         <input type="hidden" name="correo_destino" value="factdental@hotmail.com" />
         <input type="text" name="name" placeholder="Tu nombre" required />
@@ -3082,6 +3164,15 @@
         </div>
 
         <button class="btn secondary" id="clearScheduleBlocks" type="button">Limpiar bloqueos de esta fecha</button>
+
+        <div class="appointment-admin" aria-label="Administrar comentarios de citas">
+          <div class="appointment-admin-head">
+            <h3>Comentarios de citas</h3>
+            <button class="btn secondary" id="refreshAppointmentComments" type="button">Actualizar lista</button>
+          </div>
+          <p class="appointment-admin-status" id="appointmentCommentsStatus">Entra con la clave y actualiza la lista para ver las citas registradas.</p>
+          <div class="appointment-admin-list" id="appointmentCommentsList" aria-live="polite"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -3152,7 +3243,7 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const APPOINTMENT_ENDPOINT = "https://formspree.io/f/xojbpedo";
+      const APPOINTMENT_ENDPOINT = "https://script.google.com/macros/s/AKfycbynjzWOLQQyC1lCws-9SSIAt7FMeG70k_ybL5d1EvijndZVZLGfpmU3wnjOgcF4nN1MZg/exec";
       const ADMIN_PASSCODE = "Prodental2026";
       const initialHash = window.location.hash;
       if ("scrollRestoration" in history) history.scrollRestoration = "manual";
@@ -3190,6 +3281,9 @@
       const closeFullDay = document.querySelector("#closeFullDay");
       const adminTimeGrid = document.querySelector("#adminTimeGrid");
       const clearScheduleBlocks = document.querySelector("#clearScheduleBlocks");
+      const refreshAppointmentComments = document.querySelector("#refreshAppointmentComments");
+      const appointmentCommentsStatus = document.querySelector("#appointmentCommentsStatus");
+      const appointmentCommentsList = document.querySelector("#appointmentCommentsList");
       const specialistTabs = Array.from(document.querySelectorAll(".specialist-tab"));
       const specialistPanels = Array.from(document.querySelectorAll(".specialist-card"));
       const welcomeScreen = document.querySelector("#welcomeScreen");
@@ -3317,6 +3411,104 @@
         }
       };
 
+      const setAppointmentCommentsStatus = (message) => {
+        if (appointmentCommentsStatus) appointmentCommentsStatus.textContent = message;
+      };
+
+      const appointmentAdminRequest = async (payload) => {
+        if (!APPOINTMENT_ENDPOINT || APPOINTMENT_ENDPOINT.includes("PEGA_AQUI")) {
+          throw new Error("Falta configurar la URL de Google Apps Script.");
+        }
+
+        const body = new URLSearchParams({
+          passcode: adminSessionPasscode,
+          ...payload
+        });
+
+        const response = await fetch(APPOINTMENT_ENDPOINT, {
+          method: "POST",
+          body,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+            Accept: "application/json"
+          }
+        });
+        const result = await response.json().catch(() => null);
+        if (!response.ok || !result?.ok) {
+          throw new Error(result?.message || "No se pudo completar la acción.");
+        }
+        return result;
+      };
+
+      const renderAppointmentComments = (appointments = []) => {
+        if (!appointmentCommentsList) return;
+        if (!appointments.length) {
+          appointmentCommentsList.innerHTML = `<div class="empty-slots">No hay citas registradas todavía.</div>`;
+          return;
+        }
+
+        appointmentCommentsList.innerHTML = appointments.map((appointment) => {
+          const comment = appointment.currentComment || "Sin comentarios";
+          const originalComment = appointment.originalComment || "Sin comentarios";
+          return `
+            <article class="appointment-record" data-appointment-id="${escapeHtml(appointment.appointmentId)}">
+              <div class="appointment-record-meta">
+                <strong>${escapeHtml(appointment.name || "Paciente")}</strong>
+                <span>${escapeHtml(appointment.date || "")} ${escapeHtml(appointment.time || "")} · ${escapeHtml(appointment.service || "")}</span>
+                <span>${escapeHtml(appointment.phone || "")} · ${escapeHtml(appointment.email || "")}</span>
+              </div>
+              <p class="comment-original"><span>Comentario original</span>${escapeHtml(originalComment)}</p>
+              <textarea class="appointment-comment-edit" aria-label="Editar comentario de ${escapeHtml(appointment.name || "paciente")}">${escapeHtml(comment)}</textarea>
+              <div class="appointment-record-actions">
+                <button class="btn save-comment" type="button">Guardar comentario</button>
+                <button class="btn secondary delete-comment" type="button">Borrar comentario</button>
+              </div>
+            </article>
+          `;
+        }).join("");
+      };
+
+      const loadAppointmentComments = async () => {
+        try {
+          setAppointmentCommentsStatus("Cargando citas registradas...");
+          const result = await appointmentAdminRequest({ action: "list" });
+          renderAppointmentComments(result.appointments || []);
+          setAppointmentCommentsStatus(`Citas cargadas: ${(result.appointments || []).length}.`);
+        } catch (error) {
+          setAppointmentCommentsStatus(error.message || "No se pudieron cargar los comentarios.");
+        }
+      };
+
+      const saveAppointmentComment = async (record) => {
+        const appointmentId = record?.dataset.appointmentId;
+        const textarea = record?.querySelector(".appointment-comment-edit");
+        if (!appointmentId || !textarea) return;
+
+        setAppointmentCommentsStatus("Guardando comentario...");
+        const result = await appointmentAdminRequest({
+          action: "updateComment",
+          appointmentId,
+          comment: textarea.value
+        });
+        setAppointmentCommentsStatus(result.message || "Comentario actualizado.");
+        showToast(result.message || "Comentario actualizado.");
+        await loadAppointmentComments();
+      };
+
+      const deleteAppointmentComment = async (record) => {
+        const appointmentId = record?.dataset.appointmentId;
+        if (!appointmentId) return;
+
+        setAppointmentCommentsStatus("Borrando comentario...");
+        const result = await appointmentAdminRequest({
+          action: "deleteComment",
+          appointmentId
+        });
+        setAppointmentCommentsStatus(result.message || "Comentario borrado.");
+        showToast(result.message || "Comentario borrado.");
+        await loadAppointmentComments();
+      };
+
       openSpecialists?.addEventListener("click", openSpecialistsModal);
       closeSpecialists?.addEventListener("click", closeSpecialistsModal);
       specialistsModal?.addEventListener("click", (event) => {
@@ -3353,8 +3545,10 @@
       doctorAccessForm?.addEventListener("submit", (event) => {
         event.preventDefault();
         if (doctorPasscode?.value.trim() === ADMIN_PASSCODE) {
+          adminSessionPasscode = doctorPasscode.value.trim();
           closeDoctorAccessModal();
           openScheduleAdminModal();
+          loadAppointmentComments();
           return;
         }
         if (doctorAccessError) doctorAccessError.textContent = "Clave incorrecta. Intenta de nuevo.";
@@ -3362,6 +3556,22 @@
       closeScheduleAdmin?.addEventListener("click", closeScheduleAdminModal);
       scheduleAdminModal?.addEventListener("click", (event) => {
         if (event.target === scheduleAdminModal) closeScheduleAdminModal();
+      });
+      refreshAppointmentComments?.addEventListener("click", loadAppointmentComments);
+      appointmentCommentsList?.addEventListener("click", async (event) => {
+        const record = event.target.closest(".appointment-record");
+        if (!record) return;
+        try {
+          if (event.target.closest(".save-comment")) {
+            await saveAppointmentComment(record);
+          }
+          if (event.target.closest(".delete-comment")) {
+            await deleteAppointmentComment(record);
+          }
+        } catch (error) {
+          setAppointmentCommentsStatus(error.message || "No se pudo actualizar el comentario.");
+          showToast(error.message || "No se pudo actualizar el comentario.");
+        }
       });
       specialistTabs.forEach((tab) => {
         tab.addEventListener("click", () => setSpecialistTab(tab.dataset.specialistTab));
@@ -3470,6 +3680,7 @@
         "Prodental Coatzacoalcos": "Revolución 522, Coatzacoalcos",
         "Prodental Veracruz Pto.": "Bernal Díaz del Castillo 483, 1er Piso, Reforma, Veracruz Centro 91919"
       };
+      let adminSessionPasscode = "";
       const locationCards = {
         "Prodental Coatzacoalcos": {
           tag: "Dirección 1",
@@ -3550,10 +3761,17 @@
         closeWelcome("#inicio");
       });
 
-      const baseSlots = ["09:00", "09:20", "09:40", "10:00", "10:20", "10:40", "11:00", "11:20", "11:40", "12:00", "12:20", "12:40", "13:00", "16:00", "16:20", "16:40", "17:00", "17:20", "17:40", "18:00"];
+      const BUSINESS_OPEN_MINUTES = 10 * 60;
+      const BUSINESS_CLOSE_MINUTES = (18 * 60) + 30;
+      const APPOINTMENT_DURATION_MINUTES = 60;
+      const MAX_BOOKING_DAYS = 45;
+      const MIN_SAME_DAY_NOTICE_MINUTES = 6 * 60;
+      const SLOT_STEP_MINUTES = 30;
+      const LAST_APPOINTMENT_START_MINUTES = BUSINESS_CLOSE_MINUTES - APPOINTMENT_DURATION_MINUTES;
       const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
       const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
       let scheduleTodayKey = "";
+      let scheduleMaxDateKey = "";
       let scheduleDays = [];
       let appointmentSlots = {};
 
@@ -3563,19 +3781,55 @@
         return (hours * 60) + minutes;
       };
 
-      const isPastSlot = (date, time) => {
+      const getTimeFromMinutes = (minutes) => `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+
+      const buildBaseSlots = () => {
+        const slots = [];
+        for (let minutes = BUSINESS_OPEN_MINUTES; minutes <= LAST_APPOINTMENT_START_MINUTES; minutes += SLOT_STEP_MINUTES) {
+          slots.push(getTimeFromMinutes(minutes));
+        }
+        return slots;
+      };
+
+      const baseSlots = buildBaseSlots();
+
+      const getSameDayMinimumMinutes = () => {
         const now = new Date();
-        if (date !== getIsoDate(now)) return false;
-        return getMinutesFromTime(time) <= (now.getHours() * 60) + now.getMinutes();
+        return Math.max(
+          BUSINESS_OPEN_MINUTES,
+          (now.getHours() * 60) + now.getMinutes() + MIN_SAME_DAY_NOTICE_MINUTES
+        );
+      };
+
+      const isDateWithinBookingWindow = (date) => date >= scheduleTodayKey && date <= scheduleMaxDateKey;
+
+      const isSlotAllowed = (date, time) => {
+        if (!isDateWithinBookingWindow(date)) return false;
+        const slotStart = getMinutesFromTime(time);
+        const slotEnd = slotStart + APPOINTMENT_DURATION_MINUTES;
+        if (slotStart < BUSINESS_OPEN_MINUTES || slotEnd > BUSINESS_CLOSE_MINUTES) return false;
+        if (date !== getIsoDate(new Date())) return true;
+        return slotStart >= getSameDayMinimumMinutes();
       };
 
       const buildScheduleDays = () => {
         const scheduleStartDate = new Date();
         scheduleStartDate.setHours(0, 0, 0, 0);
+        const scheduleMaxDate = new Date(scheduleStartDate);
+        scheduleMaxDate.setDate(scheduleStartDate.getDate() + MAX_BOOKING_DAYS);
         scheduleTodayKey = getIsoDate(scheduleStartDate);
+        scheduleMaxDateKey = getIsoDate(scheduleMaxDate);
+        if (appointmentDate) {
+          appointmentDate.setAttribute("min", scheduleTodayKey);
+          appointmentDate.setAttribute("max", scheduleMaxDateKey);
+        }
+        if (appointmentTime) {
+          appointmentTime.setAttribute("min", getTimeFromMinutes(BUSINESS_OPEN_MINUTES));
+          appointmentTime.setAttribute("max", getTimeFromMinutes(LAST_APPOINTMENT_START_MINUTES));
+        }
         scheduleDays = [];
         let dayOffset = 0;
-        while (scheduleDays.length < 15) {
+        while (dayOffset <= MAX_BOOKING_DAYS) {
           const date = new Date(scheduleStartDate);
           date.setDate(scheduleStartDate.getDate() + dayOffset);
           dayOffset += 1;
@@ -3590,9 +3844,8 @@
             fullLabel: `${label} ${date.getDate()} ${monthNames[date.getMonth()]}`
           });
         }
-        appointmentSlots = scheduleDays.reduce((slotsByDate, day, index) => {
-          const offset = index % 4;
-          slotsByDate[day.iso] = baseSlots.filter((_, slotIndex) => (slotIndex + offset) % 5 !== 0);
+        appointmentSlots = scheduleDays.reduce((slotsByDate, day) => {
+          slotsByDate[day.iso] = baseSlots.filter((slot) => isSlotAllowed(day.iso, slot));
           return slotsByDate;
         }, {});
       };
@@ -3678,10 +3931,13 @@
       const renderAppointmentTimes = () => {
         if (!appointmentTimes || !toggleTimes || !scheduleCard) return;
         const block = getDayBlock(selectedDate);
-        const slots = block.closed ? [] : (appointmentSlots[selectedDate] || []).filter((slot) => !block.times?.includes(slot) && !isPastSlot(selectedDate, slot));
+        const slots = block.closed ? [] : (appointmentSlots[selectedDate] || []).filter((slot) => !block.times?.includes(slot) && isSlotAllowed(selectedDate, slot));
+        const emptyMessage = selectedDate === getIsoDate(new Date())
+          ? "Ya no hay horarios disponibles para hoy. Selecciona otra fecha."
+          : "No hay horarios disponibles para esta fecha.";
         appointmentTimes.innerHTML = slots.length ? slots.map((slot, index) => `
           <button class="time-slot${index > 3 ? " extra" : ""}" type="button" data-time="${slot}">${slot}</button>
-        `).join("") : `<div class="empty-slots">${selectedDate === getIsoDate(new Date()) ? "Ya no hay horarios disponibles para hoy." : "No hay horarios disponibles para esta fecha."}</div>`;
+        `).join("") : `<div class="empty-slots">${emptyMessage}</div>`;
         scheduleCard.classList.remove("show-more");
         toggleTimes.textContent = "Mostrar más horas";
         toggleTimes.hidden = slots.length <= 4;
@@ -3803,6 +4059,19 @@
 
       form?.addEventListener("submit", async (event) => {
         event.preventDefault();
+        if (!APPOINTMENT_ENDPOINT || APPOINTMENT_ENDPOINT.includes("PEGA_AQUI")) {
+          showToast("Falta configurar la URL de Google Apps Script.");
+          return;
+        }
+        if (!appointmentDate?.value || !appointmentTime?.value) {
+          showToast("Selecciona una fecha y una hora antes de agendar.");
+          return;
+        }
+        if (!isSlotAllowed(appointmentDate.value, appointmentTime.value)) {
+          showToast("Ese horario está fuera del horario permitido. Selecciona otro horario.");
+          renderAppointmentTimes();
+          return;
+        }
         const submitButton = form.querySelector("button[type='submit']");
         const originalText = submitButton?.textContent || "Solicitar cita";
         if (submitButton) {
@@ -3815,14 +4084,26 @@
         try {
           const [response] = await Promise.all([
             fetch(APPOINTMENT_ENDPOINT, {
-            method: "POST",
-            body: new FormData(form),
-            headers: { Accept: "application/json" }
+              method: "POST",
+              body: new URLSearchParams(new FormData(form)),
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+                Accept: "application/json"
+              }
             }),
             minimumLoaderTime
           ]);
-          if (!response.ok) throw new Error("No se pudo enviar la solicitud");
           const submittedData = Object.fromEntries(new FormData(form).entries());
+          const result = await response.json().catch(() => null);
+          if (!response.ok || !result?.ok) {
+            throw new Error(result?.message || "No se pudo enviar la solicitud");
+          }
+          if (result.status === "busy") {
+            hideAppointmentLoader(false);
+            showToast(result.message || "Ese horario no está disponible. Elige otro horario.");
+            renderAppointmentTimes();
+            return;
+          }
           const selectedLocation = submittedData.location || locationSelect?.value || "Prodental Coatzacoalcos";
           const whatsappUrl = buildWhatsappUrl(submittedData);
           form.reset();
@@ -3831,7 +4112,8 @@
           updateSelectedService();
           openThanksModal(selectedLocation, whatsappUrl);
           hideAppointmentLoader(true);
-          showToast("Solicitud recibida. Te contactaremos para confirmar disponibilidad.");
+          showToast(result.message || "Cita agendada correctamente en Google Calendar.");
+          if (scheduleAdminModal && !scheduleAdminModal.hidden) loadAppointmentComments();
         } catch (error) {
           await minimumLoaderTime;
           hideAppointmentLoader(false);
