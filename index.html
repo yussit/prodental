@@ -3243,7 +3243,7 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const APPOINTMENT_ENDPOINT = "https://script.google.com/macros/s/AKfycbynjzWOLQQyC1lCws-9SSIAt7FMeG70k_ybL5d1EvijndZVZLGfpmU3wnjOgcF4nN1MZg/exec";
+      const APPOINTMENT_ENDPOINT = "https://script.google.com/macros/s/AKfycbyrXjv_lOxZxaKqy6UoViGQWkYVLbePafNr7FrsdjEh0eRtpqSj3CUTJ8lK_2lS6PcPTw/exec";
       const FORMSPREE_ENDPOINT = "https://formspree.io/f/xojbpedo";
       const ADMIN_PASSCODE = "Prodental2026";
       const initialHash = window.location.hash;
@@ -4157,8 +4157,10 @@
         } catch (error) {
           await minimumLoaderTime;
           hideAppointmentLoader(false);
-          const emailSent = await sendAppointmentEmailBackup(submittedData);
-          if (emailSent) {
+          await sendAppointmentEmailBackup(submittedData);
+          showToast(error.message || "No se pudo crear la cita en Google Calendar. Revisa Apps Script.");
+          return;
+          if (false) {
             const selectedLocation = submittedData.location || locationSelect?.value || "Prodental Coatzacoalcos";
             const whatsappUrl = buildWhatsappUrl(submittedData);
             form.reset();
