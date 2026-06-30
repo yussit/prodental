@@ -2696,22 +2696,22 @@
         <p>Precios de referencia. La doctora confirma el tratamiento ideal después de la valoración clínica.</p>
       </div>
       <div class="price-grid">
-        <article class="price"><h3>Primera visita Odontología</h3><strong>$600</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Exodoncia</h3><strong>Desde $1,000</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Profilaxis / Limpieza dental</h3><strong>Desde $1,200</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Tratamiento de endodoncia</h3><strong>Desde $3,000</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Blanqueamiento dental</h3><strong>Desde $1,500</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Brackets de cerámica</h3><strong>Desde $12,000</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Brackets para niños</h3><strong>Desde $5,000</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Carillas de porcelana</h3><strong>Desde $5,000</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Consulta de ortodoncia</h3><strong>Desde $800</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Coronas estéticas</h3><strong>Desde $2,500</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Diseño de sonrisa</h3><strong>Desde $600</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Endopostes de fibra de vidrio</h3><strong>Desde $1,500</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Extracción de muelas del juicio</h3><strong>Desde $2,500</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Guardas gnatológicas</h3><strong>Desde $5,500</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Ortodoncia convencional</h3><strong>Desde $6,000</strong><a href="#contacto">Agendar cita</a></article>
-        <article class="price"><h3>Resinas dentales</h3><strong>Desde $900</strong><a href="#contacto">Agendar cita</a></article>
+        <article class="price"><h3>Primera visita Odontología</h3><strong>$600</strong></article>
+        <article class="price"><h3>Exodoncia</h3><strong>Desde $1,000</strong></article>
+        <article class="price"><h3>Profilaxis / Limpieza dental</h3><strong>Desde $1,200</strong></article>
+        <article class="price"><h3>Tratamiento de endodoncia</h3><strong>Desde $3,000</strong></article>
+        <article class="price"><h3>Blanqueamiento dental</h3><strong>Desde $1,500</strong></article>
+        <article class="price"><h3>Brackets de cerámica</h3><strong>Desde $12,000</strong></article>
+        <article class="price"><h3>Brackets para niños</h3><strong>Desde $5,000</strong></article>
+        <article class="price"><h3>Carillas de porcelana</h3><strong>Desde $5,000</strong></article>
+        <article class="price"><h3>Consulta de ortodoncia</h3><strong>Desde $800</strong></article>
+        <article class="price"><h3>Coronas estéticas</h3><strong>Desde $2,500</strong></article>
+        <article class="price"><h3>Diseño de sonrisa</h3><strong>Desde $600</strong></article>
+        <article class="price"><h3>Endopostes de fibra de vidrio</h3><strong>Desde $1,500</strong></article>
+        <article class="price"><h3>Extracción de muelas del juicio</h3><strong>Desde $2,500</strong></article>
+        <article class="price"><h3>Guardas gnatológicas</h3><strong>Desde $5,500</strong></article>
+        <article class="price"><h3>Ortodoncia convencional</h3><strong>Desde $6,000</strong></article>
+        <article class="price"><h3>Resinas dentales</h3><strong>Desde $900</strong></article>
       </div>
     </section>
 
@@ -2829,7 +2829,7 @@
               <span><strong>Correo</strong><a href="mailto:factdental@hotmail.com">factdental@hotmail.com</a></span>
             </div>
             <div class="schedule-notes" aria-label="Información de atención">
-              <span>Horario de atención: lunes a sábado, 9:00 a.m. a 6:00 p.m.</span>
+              <span>Horario de atención: lunes a sábado, 10:00 a.m. a 6:30 p.m.</span>
               <span>La solicitud queda pendiente de confirmación por teléfono o WhatsApp.</span>
             </div>
             <div class="date-carousel" aria-label="Fechas disponibles">
@@ -3064,7 +3064,7 @@
         <span id="appointmentModalSummary">Elige una fecha y hora disponible para continuar.</span>
       </div>
 
-      <form class="appointment-form" id="form" action="" method="POST">
+      <form class="appointment-form" id="form" action="https://formspree.io/f/xojbpedo" method="POST">
         <input type="hidden" name="_subject" value="Nueva solicitud de cita - Prodental" />
         <input type="hidden" name="correo_destino" value="factdental@hotmail.com" />
         <input type="text" name="name" placeholder="Tu nombre" required />
@@ -3187,7 +3187,7 @@
         <button class="icon-button" id="closeThanksModal" type="button" aria-label="Cerrar confirmación">&times;</button>
       </div>
 
-      <p class="lead">Prodental se pondrá en contacto contigo pronto para confirmar tu cita.</p>
+      <p class="lead" id="thanksMessage">Prodental se pondrá en contacto contigo pronto para confirmar tu cita.</p>
 
       <article class="card thanks-address">
         <div>
@@ -3244,6 +3244,7 @@
     <script>
     document.addEventListener("DOMContentLoaded", () => {
       const APPOINTMENT_ENDPOINT = "https://script.google.com/macros/s/AKfycbynjzWOLQQyC1lCws-9SSIAt7FMeG70k_ybL5d1EvijndZVZLGfpmU3wnjOgcF4nN1MZg/exec";
+      const FORMSPREE_ENDPOINT = "https://formspree.io/f/xojbpedo";
       const ADMIN_PASSCODE = "Prodental2026";
       const initialHash = window.location.hash;
       if ("scrollRestoration" in history) history.scrollRestoration = "manual";
@@ -3260,6 +3261,8 @@
       const closeThanksModalButton = document.querySelector("#closeThanksModal");
       const finishThanks = document.querySelector("#finishThanks");
       const thanksWhatsappLink = document.querySelector("#thanksWhatsappLink");
+      const thanksTitle = document.querySelector("#thanksTitle");
+      const thanksMessage = document.querySelector("#thanksMessage");
       const thanksAddress = document.querySelector("#thanksAddress");
       const thanksLocationTag = document.querySelector("#thanksLocationTag");
       const thanksLocationName = document.querySelector("#thanksLocationName");
@@ -3351,9 +3354,11 @@
         document.body.classList.remove("modal-open");
       };
 
-      const openThanksModal = (locationName, whatsappUrl = "https://wa.me/529211181380") => {
+      const openThanksModal = (locationName, whatsappUrl = "https://wa.me/529211181380", options = {}) => {
         if (!thanksModal) return;
         const card = locationCards[locationName] || locationCards["Prodental Coatzacoalcos"];
+        if (thanksTitle) thanksTitle.textContent = options.title || "Cita agendada";
+        if (thanksMessage) thanksMessage.textContent = options.message || "Tu cita fue registrada. Prodental se pondrá en contacto contigo para confirmar cualquier detalle.";
         if (thanksLocationTag) thanksLocationTag.textContent = card.tag;
         if (thanksLocationName) thanksLocationName.textContent = card.name;
         if (thanksAddress) thanksAddress.textContent = card.address;
@@ -3415,29 +3420,72 @@
         if (appointmentCommentsStatus) appointmentCommentsStatus.textContent = message;
       };
 
-      const appointmentAdminRequest = async (payload) => {
+      const appsScriptRequest = (payload) => new Promise((resolve, reject) => {
         if (!APPOINTMENT_ENDPOINT || APPOINTMENT_ENDPOINT.includes("PEGA_AQUI")) {
-          throw new Error("Falta configurar la URL de Google Apps Script.");
+          reject(new Error("Falta configurar la URL de Google Apps Script."));
+          return;
         }
 
-        const body = new URLSearchParams({
+        const callbackName = `prodentalCallback_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+        const script = document.createElement("script");
+        const timeout = window.setTimeout(() => {
+          cleanup();
+          reject(new Error("No se pudo conectar con Google Apps Script."));
+        }, 15000);
+
+        const cleanup = () => {
+          window.clearTimeout(timeout);
+          delete window[callbackName];
+          script.remove();
+        };
+
+        window[callbackName] = (result) => {
+          cleanup();
+          if (!result?.ok) {
+            reject(new Error(result?.message || "No se pudo completar la acción."));
+            return;
+          }
+          resolve(result);
+        };
+
+        const url = new URL(APPOINTMENT_ENDPOINT);
+        const params = new URLSearchParams({
+          ...payload,
+          callback: callbackName
+        });
+        url.search = params.toString();
+        script.src = url.toString();
+        script.onerror = () => {
+          cleanup();
+          reject(new Error("No se pudo conectar con Google Apps Script."));
+        };
+        document.body.appendChild(script);
+      });
+
+      const appointmentAdminRequest = async (payload) => {
+        return appsScriptRequest({
           passcode: adminSessionPasscode,
           ...payload
         });
+      };
 
-        const response = await fetch(APPOINTMENT_ENDPOINT, {
-          method: "POST",
-          body,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-            Accept: "application/json"
-          }
-        });
-        const result = await response.json().catch(() => null);
-        if (!response.ok || !result?.ok) {
-          throw new Error(result?.message || "No se pudo completar la acción.");
+      const sendAppointmentEmailBackup = async (appointmentData) => {
+        if (!FORMSPREE_ENDPOINT) return false;
+        const formspreeData = new FormData();
+        Object.entries(appointmentData).forEach(([key, value]) => formspreeData.append(key, value));
+        formspreeData.append("_subject", "Nueva solicitud de cita - Prodental");
+        formspreeData.append("correo_destino", "factdental@hotmail.com");
+
+        try {
+          const response = await fetch(FORMSPREE_ENDPOINT, {
+            method: "POST",
+            body: formspreeData,
+            headers: { Accept: "application/json" }
+          });
+          return response.ok;
+        } catch (error) {
+          return false;
         }
-        return result;
       };
 
       const renderAppointmentComments = (appointments = []) => {
@@ -3461,7 +3509,7 @@
               <textarea class="appointment-comment-edit" aria-label="Editar comentario de ${escapeHtml(appointment.name || "paciente")}">${escapeHtml(comment)}</textarea>
               <div class="appointment-record-actions">
                 <button class="btn save-comment" type="button">Guardar comentario</button>
-                <button class="btn secondary delete-comment" type="button">Borrar comentario</button>
+                <button class="btn secondary delete-comment" type="button">Quitar comentario de esta cita</button>
               </div>
             </article>
           `;
@@ -4080,24 +4128,13 @@
         }
         showAppointmentLoader();
         const minimumLoaderTime = new Promise((resolve) => window.setTimeout(resolve, 1500));
+        const submittedData = Object.fromEntries(new FormData(form).entries());
 
         try {
-          const [response] = await Promise.all([
-            fetch(APPOINTMENT_ENDPOINT, {
-              method: "POST",
-              body: new URLSearchParams(new FormData(form)),
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-                Accept: "application/json"
-              }
-            }),
+          const [result] = await Promise.all([
+            appsScriptRequest(submittedData),
             minimumLoaderTime
           ]);
-          const submittedData = Object.fromEntries(new FormData(form).entries());
-          const result = await response.json().catch(() => null);
-          if (!response.ok || !result?.ok) {
-            throw new Error(result?.message || "No se pudo enviar la solicitud");
-          }
           if (result.status === "busy") {
             hideAppointmentLoader(false);
             showToast(result.message || "Ese horario no está disponible. Elige otro horario.");
@@ -4106,17 +4143,35 @@
           }
           const selectedLocation = submittedData.location || locationSelect?.value || "Prodental Coatzacoalcos";
           const whatsappUrl = buildWhatsappUrl(submittedData);
+          const emailSent = await sendAppointmentEmailBackup(submittedData);
           form.reset();
           closeAppointmentModal();
           updateSelectedLocation();
           updateSelectedService();
           openThanksModal(selectedLocation, whatsappUrl);
           hideAppointmentLoader(true);
-          showToast(result.message || "Cita agendada correctamente en Google Calendar.");
+          showToast(emailSent
+            ? "Cita agendada correctamente. También se envió el aviso por correo."
+            : "Cita agendada correctamente. Revisa Calendar; el aviso por correo no pudo enviarse.");
           if (scheduleAdminModal && !scheduleAdminModal.hidden) loadAppointmentComments();
         } catch (error) {
           await minimumLoaderTime;
           hideAppointmentLoader(false);
+          const emailSent = await sendAppointmentEmailBackup(submittedData);
+          if (emailSent) {
+            const selectedLocation = submittedData.location || locationSelect?.value || "Prodental Coatzacoalcos";
+            const whatsappUrl = buildWhatsappUrl(submittedData);
+            form.reset();
+            closeAppointmentModal();
+            updateSelectedLocation();
+            updateSelectedService();
+            openThanksModal(selectedLocation, whatsappUrl, {
+              title: "Solicitud recibida",
+              message: "Recibimos tu solicitud por correo. Prodental revisará la agenda y te contactará para confirmar."
+            });
+            showToast("Solicitud recibida por correo. Revisa la configuración de Calendar.");
+            return;
+          }
           showToast("No se pudo enviar la solicitud. Intenta de nuevo o contáctanos por teléfono.");
         } finally {
           if (submitButton) {
