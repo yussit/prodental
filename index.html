@@ -1116,6 +1116,15 @@
       background: linear-gradient(145deg, var(--sky-bright), var(--steel));
     }
 
+    .appointment-form-status {
+      grid-column: 1 / -1;
+      min-height: 22px;
+      margin: 0;
+      color: #082e68;
+      font-weight: 900;
+      line-height: 1.45;
+    }
+
     .form-panel-head {
       display: grid;
       gap: 4px;
@@ -3093,6 +3102,7 @@
           <div class="fixed-appointment-value"><span>Hora</span><strong id="appointmentTimeDisplay">Selecciona hora</strong></div>
         </div>
         <textarea name="message" placeholder="Cuéntanos si tienes dolor, dudas o algún detalle importante"></textarea>
+        <p class="appointment-form-status" id="appointmentFormStatus" aria-live="polite"></p>
         <button class="btn" type="submit">Solicitar cita</button>
       </form>
     </div>
@@ -3315,6 +3325,7 @@
       const appointmentTime = document.querySelector("#appointmentTime");
       const appointmentDateDisplay = document.querySelector("#appointmentDateDisplay");
       const appointmentTimeDisplay = document.querySelector("#appointmentTimeDisplay");
+      const appointmentFormStatus = document.querySelector("#appointmentFormStatus");
       const locationSelect = document.querySelector("select[name='location']");
       const selectedLocationAddress = document.querySelector("#selectedLocationAddress");
       const serviceSelect = document.querySelector("select[name='service']");
@@ -3418,6 +3429,10 @@
 
       const setAppointmentCommentsStatus = (message) => {
         if (appointmentCommentsStatus) appointmentCommentsStatus.textContent = message;
+      };
+
+      const setAppointmentFormStatus = (message) => {
+        if (appointmentFormStatus) appointmentFormStatus.textContent = message;
       };
 
       const appsScriptRequest = (payload) => new Promise((resolve, reject) => {
@@ -4097,6 +4112,7 @@
         if (appointmentTimeDisplay) appointmentTimeDisplay.textContent = button.dataset.time || "Selecciona hora";
         if (selectedSummary) selectedSummary.textContent = `Seleccionaste ${selectedDateLabel} a las ${button.dataset.time}. Completa tus datos para solicitar la cita.`;
         if (appointmentModalSummary) appointmentModalSummary.textContent = `${selectedDateLabel} a las ${button.dataset.time}. Completa tus datos para solicitar la cita.`;
+        setAppointmentFormStatus("");
         openAppointmentModal();
       });
 
@@ -4112,6 +4128,7 @@
           return;
         }
         if (!appointmentDate?.value || !appointmentTime?.value) {
+          setAppointmentFormStatus("Selecciona una fecha y una hora antes de agendar.");
           showToast("Selecciona una fecha y una hora antes de agendar.");
           return;
         }
@@ -4127,6 +4144,7 @@
           submitButton.textContent = "Enviando...";
         }
         showAppointmentLoader();
+        setAppointmentFormStatus("Creando la cita en Google Calendar...");
         const minimumLoaderTime = new Promise((resolve) => window.setTimeout(resolve, 1500));
         const submittedData = Object.fromEntries(new FormData(form).entries());
 
@@ -4137,44 +4155,29 @@
           ]);
           if (result.status === "busy") {
             hideAppointmentLoader(false);
+            setAppointmentFormStatus(result.message || "Ese horario no está disponible. Selecciona otro horario.");
             showToast(result.message || "Ese horario no está disponible. Elige otro horario.");
             renderAppointmentTimes();
             return;
           }
           const selectedLocation = submittedData.location || locationSelect?.value || "Prodental Coatzacoalcos";
           const whatsappUrl = buildWhatsappUrl(submittedData);
-          const emailSent = await sendAppointmentEmailBackup(submittedData);
+          sendAppointmentEmailBackup(submittedData);
           form.reset();
+          setAppointmentFormStatus("");
           closeAppointmentModal();
           updateSelectedLocation();
           updateSelectedService();
           openThanksModal(selectedLocation, whatsappUrl);
           hideAppointmentLoader(true);
-          showToast(emailSent
-            ? `Cita agendada en Google Calendar. Evento: ${result.eventId || result.appointmentId || "creado"}. También se envió el aviso por correo.`
-            : `Cita agendada en Google Calendar. Evento: ${result.eventId || result.appointmentId || "creado"}. El aviso por correo no pudo enviarse.`);
+          showToast(`Cita agendada en Google Calendar. Evento: ${result.eventId || result.appointmentId || "creado"}.`);
           if (scheduleAdminModal && !scheduleAdminModal.hidden) loadAppointmentComments();
         } catch (error) {
           await minimumLoaderTime;
           hideAppointmentLoader(false);
           await sendAppointmentEmailBackup(submittedData);
+          setAppointmentFormStatus(error.message || "No se pudo crear la cita en Google Calendar. Selecciona otro horario.");
           showToast(error.message || "No se pudo crear la cita en Google Calendar. Revisa Apps Script.");
-          return;
-          if (false) {
-            const selectedLocation = submittedData.location || locationSelect?.value || "Prodental Coatzacoalcos";
-            const whatsappUrl = buildWhatsappUrl(submittedData);
-            form.reset();
-            closeAppointmentModal();
-            updateSelectedLocation();
-            updateSelectedService();
-            openThanksModal(selectedLocation, whatsappUrl, {
-              title: "Solicitud recibida",
-              message: "Recibimos tu solicitud por correo. Prodental revisará la agenda y te contactará para confirmar."
-            });
-            showToast("Solicitud recibida por correo. Revisa la configuración de Calendar.");
-            return;
-          }
-          showToast("No se pudo enviar la solicitud. Intenta de nuevo o contáctanos por teléfono.");
         } finally {
           if (submitButton) {
             submitButton.disabled = false;
